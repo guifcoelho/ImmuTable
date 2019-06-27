@@ -1,16 +1,18 @@
 <?php
 
-namespace Nextpack\Nextpack\Tests;
+namespace guifcoelho\JsonModels\Tests;
 
 use PHPUnit_Framework_TestCase as PHPUnit;
+
 
 /**
  * Class TestCase
  *
  * @author  Mahmoud Zalt  <mahmoud@zalt.me>
  */
-class TestCase extends PHPUnit
+abstract class TestCase extends PHPUnit
 {
+    protected $factory_path = __DIR__."/Unit/SampleModels";
 
     public function __construct()
     {
@@ -25,6 +27,5 @@ class TestCase extends PHPUnit
     public function tearDown()
     {
         parent::tearDown();
-    }
-
+    }    
 }

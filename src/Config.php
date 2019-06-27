@@ -1,9 +1,9 @@
 <?php
 
-namespace Nextpack\Nextpack;
+namespace guifcoelho\JsonModels;
 
 use Illuminate\Config\Repository;
-use Nextpack\Nextpack\Exceptions\ConfigFileNotFoundException;
+use guifcoelho\JsonModels\Exceptions\ConfigFileNotFoundException;
 
 /**
  * Class Config
@@ -16,7 +16,7 @@ class Config
     /**
      * Config file name
      */
-    CONST CONFIG_FILE_NAME = "nextpack";
+    CONST CONFIG_FILE_NAME = "jsonmodels";
 
     /**
      * @var  \Illuminate\Config\Repository

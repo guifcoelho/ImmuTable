@@ -1,22 +1,24 @@
 {
-  "name": "nextpack/nextpack",
-  "description": "Nextpack is a PHP Packages Framework (Starter Project)",
+  "name": "guifcoelho/json-models",
+  "description": "Package for using json models instead of regular SQL databases with sintax similar to Laravel Eloquent",
   "license": "MIT",
   "keywords": [
-    "NextPack",
-    "Starter"
+    "json",
+    "models",
+    "Laravel",
+    "Eloquent"
   ],
   "authors": [
     {
-      "name": "Mahmoud Zalt",
-      "email": "mahmoud@zalt.me",
-      "homepage": "http://www.zalt.me",
-      "role": "Coffee Maker :)"
+      "name": "Guilherme Freitas Coelho",
+      "email": "coelhoxz@gmail.com"
     }
   ],
   "require": {
-    "php": ">=5.4.0",
-    "illuminate/config": "5.2.*"
+    "php": "~7.3.0",
+    "illuminate/config": "5.2.*",
+    "fzaninotto/faker": "^1.8",
+    "halaxa/json-machine": "^0.3.2"
   },
   "require-dev": {
     "phpunit/phpunit": "4.*",
@@ -25,17 +27,16 @@
   },
   "autoload": {
     "psr-4": {
-      "Nextpack\\Nextpack\\": "src",
-      "Nextpack\\Library\\": "src/library"
+      "guifcoelho\\JsonModels\\": "src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Nextpack\\Nextpack\\Tests\\": "tests"
+      "guifcoelho\\JsonModels\\Tests\\": "tests"
     }
   },
   "scripts": {
-    "test": "phpunit"
+
   },
   "extra": {
     "branch-alias": {

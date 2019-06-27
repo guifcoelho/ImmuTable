@@ -1,18 +1,16 @@
 <?php
 
-namespace Nextpack\Nextpack\ServiceProviders;
+namespace guifcoelho\JsonModels\ServiceProviders;
 
 use Illuminate\Support\ServiceProvider;
-use Nextpack\Nextpack\Contracts\SampleInterface;
-use Nextpack\Nextpack\Facades\SampleFacadeAccessor;
-use Nextpack\Nextpack\Sample;
+use guifcoelho\JsonModels\Contracts\JsonModelsInterface;
+use guifcoelho\JsonModels\Facades\JsonModelsFacadeAccessor;
+use guifcoelho\JsonModels\Model;
 
 /**
- * Class NextpackServiceProvider
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
+ * Class ServiceProvider
  */
-class NextpackServiceProvider extends ServiceProvider
+class JsonModelsServiceProvider extends ServiceProvider
 {
 
     /**
@@ -70,8 +68,8 @@ class NextpackServiceProvider extends ServiceProvider
     private function implementationBindings()
     {
         $this->app->bind(
-            SampleInterface::class,
-            Sample::class
+            JsonModelsInterface::class,
+            Model::class
         );
     }
 
@@ -82,7 +80,7 @@ class NextpackServiceProvider extends ServiceProvider
     {
         // When users execute Laravel's vendor:publish command, the config file will be copied to the specified location
         $this->publishes([
-            __DIR__ . '/Config/nextpack.php' => config_path('nextpack.php'),
+            __DIR__ . '/Config/jsonmodels.php' => config_path('jsonmodels.php'),
         ]);
     }
 
@@ -92,14 +90,14 @@ class NextpackServiceProvider extends ServiceProvider
     private function facadeBindings()
     {
         // Register 'nextpack.say' instance container
-        $this->app['nextpack.sample'] = $this->app->share(function ($app) {
-            return $app->make(Sample::class);
+        $this->app['jsonmodels.model'] = $this->app->share(function ($app) {
+            return $app->make(Model::class);
         });
 
         // Register 'Sample' Alias, So users don't have to add the Alias to the 'app/config/app.php'
         $this->app->booting(function () {
             $loader = \Illuminate\Foundation\AliasLoader::getInstance();
-            $loader->alias('Sample', SampleFacadeAccessor::class);
+            $loader->alias('Model', JsonModelsFacadeAccessor::class);
         });
     }
 

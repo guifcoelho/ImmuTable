@@ -72,7 +72,7 @@ After you install a fresh copy of Nextpack, the only thing you need to do is cus
 
 The steps include renaming the code samples shipped with the Nextpack:
 
-1. Change the namespace of the application from `Nextpack\Nextpack` to your `Vendor-name\Package-name`. *(you can do this using the [Replace All] feature of your IDE).*
+1. Change the namespace of the application from `guifcoelho\JsonModels` to your `Vendor-name\Package-name`. *(you can do this using the [Replace All] feature of your IDE).*
 2. Update the following values in `composer.json`:  `name`, `description`, `keywords`, `authors`, `autoload` and don't forget to update the `namespaces`. (you might need to run `composer dump-autoload` after the changes).
 3. Run `composer install`
 4. Rename `SampleFacadeAccessor.php` and update the returned string inside the `getFacadeAccessor()` function.
