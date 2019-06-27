@@ -16,4 +16,4 @@ before_script:
   - travis_retry composer update --prefer-stable --no-interaction --prefer-source
 
 script:
-  - phpunit
+  - ./vendor/bin/phpunit
