@@ -15,7 +15,7 @@
     }
   ],
   "require": {
-    "php": ">=5.6",
+    "php": "~7.3",
     "illuminate/config": "5.2.*",
     "fzaninotto/faker": "^1.8",
     "halaxa/json-machine": "^0.3.2"
