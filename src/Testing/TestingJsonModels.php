@@ -7,6 +7,7 @@ use guifcoelho\JsonModels\Testing\Support\JsonTablesAssertions;
 use guifcoelho\JsonModels\Factory;
 use guifcoelho\JsonModels\Model;
 use guifcoelho\JsonModels\Exceptions\Exception;
+use guifcoelho\JsonModels\Config;
 
 trait TestingJsonModels
 {
@@ -26,5 +27,9 @@ trait TestingJsonModels
 
     public function bootstrap(){
         require __DIR__."/Support/Functions.php";
+        $tables_path = (new Config)->get('path_to_tables');
+        if(!file_exists($tables_path)){
+            mkdir($tables_path, 0777, true);
+        }
     }
 }

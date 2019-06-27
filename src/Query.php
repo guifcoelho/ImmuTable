@@ -29,10 +29,14 @@ class Query{
      */
     private function loadTable(bool $as_stream = true)
     {
+        $table_path = $this->model_class::getTablePath();
+        if(!file_exists($table_path)){
+            return [];
+        }
         if($as_stream){
-            return JsonMachine::fromFile($this->model_class::getTablePath());
+            return JsonMachine::fromFile($table_path);
         }else{
-            return json_decode(file_get_contents($this->model_class::getTablePath()), true);
+            return json_decode(file_get_contents($table_path), true);
         }
     }
 
