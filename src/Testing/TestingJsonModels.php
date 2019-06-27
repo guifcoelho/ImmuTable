@@ -11,7 +11,7 @@ use guifcoelho\JsonModels\Config;
 
 trait TestingJsonModels
 {
-    public function setUp()
+    public function setUp():void
     {
         parent::setUp();
         $this->bootstrap();

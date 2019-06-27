@@ -16,14 +16,15 @@
   ],
   "require": {
     "php": "~7.3",
-    "illuminate/config": "5.2.*",
+    "illuminate/config": "5.8.*",
     "fzaninotto/faker": "^1.8",
-    "halaxa/json-machine": "^0.3.2"
+    "halaxa/json-machine": "^0.3.2",
+    "symfony/var-dumper": "^4.3",
+    "symfony/finder": "^4.3",
+    "jaschilz/php-coverage-badger": "^2.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "4.*",
-    "mockery/mockery": "0.*",
-    "symfony/var-dumper": "2.*"
+    "phpunit/phpunit": "^8"
   },
   "autoload": {
     "psr-4": {
@@ -36,7 +37,10 @@
     }
   },
   "scripts": {
-
+    "run-tests-win": ".\\vendor\\bin\\phpunit --coverage-clover tests\\report\\coverage.xml --coverage-html tests\\report\\coverage-html && composer build-coverage-badge-win",
+    "run-tests-linux": "./vendor/bin/phpunit --coverage-clover tests/report/coverage.xml --coverage-html tests/report/coverage-html && composer build-coverage-badge-linux",
+    "build-coverage-badge-win": ".\\vendor\\bin\\php-coverage-badger tests\\report\\coverage.xml tests\\report\\coverage.svg",
+    "build-coverage-badge-linux": "./vendor/bin/php-coverage-badger tests/report/coverage.xml tests/report/coverage.svg"
   },
   "extra": {
     "branch-alias": {

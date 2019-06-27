@@ -43,4 +43,24 @@ class CreateModelTest extends TestCase
         $this->arrays()->assertSimilar($filter_data, $model_data);
     }
 
+    public function test_querying_with_invalid_arguments(){
+        try{
+            $model = SampleModel::where('id', 123, 3);
+        }catch(\Exception $e){
+            $this->assertTrue($e->getMessage() == "The second argument must be a comparison sign");
+        }
+
+        try{
+            $model = SampleModel::where('id', 'das', 3);
+        }catch(\Exception $e){
+            $this->assertTrue($e->getMessage() == "The second argument must be a comparison sign");
+        }
+
+        try{
+            $model = SampleModel::where('id', '==', [1,2,3]);
+        }catch(\Exception $e){
+            $this->assertTrue($e->getMessage() == "The third argument must be either a number or a string");
+        }
+    }
+
 }

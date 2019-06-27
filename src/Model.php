@@ -58,6 +58,11 @@ class Model{
         return (new Config)->get('path_to_tables')."/{$table}.json";
     }
 
+    public function getFields():array
+    {
+        return $this->fields;
+    }
+
     /**
      * Returns the table primary key
      *

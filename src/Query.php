@@ -59,6 +59,7 @@ class Query{
             case '<=': return $el <= $value;
             case '>=': return $el >= $value;
             case '===': return $el === $value;
+            default: throw new \Exception("The second argument must be a comparison sign");
         }
     }
 

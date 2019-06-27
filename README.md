@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.com/guifcoelho/json-models.svg?branch=master)](https://travis-ci.com/guifcoelho/json-models)
+![Code Coverage Status](tests/report/coverage.svg)
+
 
 # JsonModels
 

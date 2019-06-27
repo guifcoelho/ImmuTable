@@ -2,7 +2,7 @@
 
 namespace guifcoelho\JsonModels\Tests;
 
-use PHPUnit_Framework_TestCase as PHPUnit;
+use PHPUnit\Framework\TestCase as PHPUnit;
 
 
 /**
@@ -10,7 +10,7 @@ use PHPUnit_Framework_TestCase as PHPUnit;
  *
  * @author  Mahmoud Zalt  <mahmoud@zalt.me>
  */
-abstract class TestCase extends PHPUnit
+class TestCase extends PHPUnit
 {
     protected $factory_path = __DIR__."/Unit/SampleModels";
 
@@ -19,12 +19,12 @@ abstract class TestCase extends PHPUnit
         parent::__construct();
     }
 
-    public function setUp()
+    public function setUp():void
     {
         parent::setUp();
     }
 
-    public function tearDown()
+    public function tearDown():void
     {
         parent::tearDown();
     }    

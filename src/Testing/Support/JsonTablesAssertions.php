@@ -2,7 +2,7 @@
 
 namespace guifcoelho\JsonModels\Testing\Support;
 
-use PHPUnit_Framework_Assert as PHPUnit;
+use PHPUnit\Framework\Assert as PHPUnit;
 use guifcoelho\JsonModels\Testing\Support\ArrayAssertions;
 use guifcoelho\JsonModels\Model;
 
