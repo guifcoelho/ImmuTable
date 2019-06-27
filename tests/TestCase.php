@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase as PHPUnit;
  */
 class TestCase extends PHPUnit
 {
-    protected $factory_path = __DIR__."/Unit/SampleModels";
+    protected $factory_path = __DIR__."/Unit/SampleModels/Factory";
 
     public function __construct()
     {

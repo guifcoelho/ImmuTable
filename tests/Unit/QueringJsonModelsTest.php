@@ -10,40 +10,30 @@ class CreateModelTest extends TestCase
 {
     use TestingJsonModels;
 
-    protected function eraseAndCreateNew(int $size){
-        $data = [];
-        foreach(range(1,$size) as $item){
-            $data[] = [
-                'id' => $item,
-                'name' => "Name ".rand(0,100000),
-                'email' => "email".rand(0,10000)."@email.com"
-            ];
-        }
-        file_put_contents(SampleModel::getTablePath(), json_encode($data));
-        return $data;
-    }
-
     public function test_create_and_load_json_model()
     {
-        $data = $this->eraseAndCreateNew(10);
+        $data = jsonModelFactory(SampleModel::class, 10, $this->factory_path)->create();
+        file_put_contents(SampleModel::getTablePath(), json_encode($data->toArray()));
         $model_data = SampleModel::all()->toArray();
-        $this->arrays()->assertSimilar($data, $model_data);
+        $this->arrays()->assertSimilar($data->toArray(), $model_data);
     }
 
     public function test_query_json_model()
     {
-        $data = $this->eraseAndCreateNew(10);
+        $data = jsonModelFactory(SampleModel::class, 10, $this->factory_path)->create();
+        file_put_contents(SampleModel::getTablePath(), json_encode($data->toArray()));
         $model_data = SampleModel::where('id', '>', 5)->get()->toArray();
         $filter_data = [];
-        foreach($data as $item){
-            if($item['id'] > 5){
-                $filter_data[] = $item;
+        foreach($data->extract() as $item){
+            if($item->id > 5){
+                $filter_data[] = $item->toArray();
             }
         }
         $this->arrays()->assertSimilar($filter_data, $model_data);
     }
 
     public function test_querying_with_invalid_arguments(){
+        jsonModelFactory(SampleModel::class, 10, $this->factory_path)->create();
         try{
             $model = SampleModel::where('id', 123, 3);
         }catch(\Exception $e){
