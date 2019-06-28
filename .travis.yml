@@ -9,3 +9,7 @@ before_script:
 
 script:
   - ./vendor/bin/phpunit
+
+after_success:
+  curl -XPOST -H'content-type:application/json' 'https://packagist.org/api/update-package?username=guifcoelho&apiToken=${PACKAGIST_TOKEN}' -d'{"repository":{"url":"https://packagist.org/packages/guifcoelho/json-models"}}'
+
