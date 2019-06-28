@@ -231,20 +231,19 @@ class Query{
         $primary_key = $this->class::getPrimaryKey();
 
         if(is_array($data)){
-            $data = (new Collection($this->class, $data))->extract();
-        }else{
-            $data = $data->extract();
+            $data = (new Collection($this->class, $data));
         }
-        foreach($data as &$item){
-            $item = $item->toArray();
-            $item[$primary_key] = ++$last_primary_key_value;
-            $item = new $this->class($item);
-            $collection[] = $item;
+        
+        foreach(range(0,count($data)-1) as $i){
+            $data[$i]->$primary_key = ++$last_primary_key_value;
+            $data[$i] = new $this->class($data[$i]->toArray());
+            $collection[] = $data[$i];
         }
+
         $collection = (new Collection($this->class, $collection));
         file_put_contents($this->class::getTablePath(), json_encode($collection->toArray()));
 
-        $models_inserted = new Collection($this->class, $data);
-        return $models_inserted->count() == 1 ? $models_inserted->extract()[0] : $models_inserted;
+        $models_inserted = new Collection($this->class, $data->toArray());
+        return count($models_inserted) == 1 ? $models_inserted[0] : $models_inserted;
     }
 }

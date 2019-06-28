@@ -28,30 +28,30 @@ class RelationshipsTest extends TestCase
 
     public function test_hasMany_relationship(){
         $dummy = jsonModelsFactory(Sample::class, 5, $this->factory_path)->create()->shuffle();
-        $owner = $dummy->extract()[0];
+        $owner = $dummy[0];
         $size = rand(1,10);
         $owned = jsonModelsFactory(SampleOwned::class, $size, $this->factory_path)->create([
             'sample_id' => $owner->id
         ]);
-        $this->assertTrue(Sample::all()->count() > 0);
+        $this->assertTrue(count(Sample::all()) > 0);
         $collection_owned = $owner->owned()->get();
-        $this->assertTrue($collection_owned->count() == $size);
-        foreach($collection_owned->extract() as $item){
+        $this->assertTrue(count($collection_owned) == $size);
+        foreach($collection_owned as $item){
             $this->assertTrue($item->sample_id == $owner->id);
         }
     }
 
     public function test_hasMany_relationship_with_field_with_custom_name(){
         $dummy = jsonModelsFactory(Sample::class, 5, $this->factory_path)->create();
-        $owner = $dummy->extract()[0];
+        $owner = $dummy[0];
         $size = rand(1,10);
         $owned = jsonModelsFactory(SampleOwned2::class, $size, $this->factory_path)->create([
             'owner' => $owner->id
         ]);
-        $this->assertTrue(Sample::all()->count() > 0);
+        $this->assertTrue(count(Sample::all()) > 0);
         $collection_owned = $owner->owned2()->get();
-        $this->assertTrue($collection_owned->count() == $size);
-        foreach($collection_owned->extract() as $item){
+        $this->assertTrue(count($collection_owned) == $size);
+        foreach($collection_owned as $item){
             $this->assertTrue($item->owner == $owner->id);
         }
     }

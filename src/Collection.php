@@ -2,11 +2,16 @@
 
 namespace guifcoelho\JsonModels;
 
+use Countable;
+use IteratorAggregate;
+use ArrayIterator;
+use ArrayAccess;
+
 use guifcoelho\JsonModels\Exceptions\JsonModelsException;
 use guifcoelho\JsonModels\Model;
 
-class Collection{
-
+class Collection implements Countable, IteratorAggregate, ArrayAccess
+{
     /**
      * JsonModel class name
      *
@@ -107,5 +112,64 @@ class Collection{
      */
     public function extract():array{
         return $this->collection;
+    }
+
+    /**
+     * Get an iterator for the items.
+     *
+     * @return \ArrayIterator
+     */
+    public function getIterator()
+    {
+        return new ArrayIterator($this->collection);
+    }
+
+    /**
+     * Determine if an item exists at an offset.
+     *
+     * @param  mixed  $key
+     * @return bool
+     */
+    public function offsetExists($key)
+    {
+        return array_key_exists($key, $this->collection);
+    }
+
+    /**
+     * Get an item at a given offset.
+     *
+     * @param  mixed  $key
+     * @return mixed
+     */
+    public function offsetGet($key)
+    {
+        return $this->collection[$key];
+    }
+
+    /**
+     * Set the item at a given offset.
+     *
+     * @param  mixed  $key
+     * @param  mixed  $value
+     * @return void
+     */
+    public function offsetSet($key, $value)
+    {
+        if (is_null($key)) {
+            $this->collection[] = $value;
+        } else {
+            $this->collection[$key] = $value;
+        }
+    }
+
+    /**
+     * Unset the item at a given offset.
+     *
+     * @param  string  $key
+     * @return void
+     */
+    public function offsetUnset($key)
+    {
+        unset($this->collection[$key]);
     }
 }

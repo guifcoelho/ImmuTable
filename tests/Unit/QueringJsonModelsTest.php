@@ -32,7 +32,7 @@ class CreateModelTest extends TestCase
         file_put_contents(Sample::getTablePath(), json_encode($data->toArray()));
         $model_data = Sample::where('id', '>', 5)->get()->toArray();
         $filter_data = [];
-        foreach($data->extract() as $item){
+        foreach($data as $item){
             if($item->id > 5){
                 $filter_data[] = $item->toArray();
             }
@@ -85,7 +85,7 @@ class CreateModelTest extends TestCase
         if(file_exists(SampleOwned::getTablePath())){
             unlink(SampleOwned::getTablePath());
         }
-        $this->assertTrue(Sample::all()->count() == 0);
+        $this->assertTrue(count(Sample::all()) == 0);
     }
 
     public function test_query_with_non_json_model_class(){
@@ -117,7 +117,7 @@ class CreateModelTest extends TestCase
         $collection = Sample::where('id', $dummy1->id)
                         ->orWhere('id', $dummy2->id)
                         ->get();
-        foreach($collection->extract() as $item){
+        foreach($collection as $item){
             $this->assertTrue($item->id == $dummy1->id || $item->id == $dummy2->id);
         }
     }

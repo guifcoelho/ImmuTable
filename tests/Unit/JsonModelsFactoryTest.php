@@ -26,7 +26,7 @@ class JsonModelsFactoryTest extends TestCase
     public function test_making_many_json_models()
     {
         $coll = jsonModelsFactory(SampleModel::class, 10, $this->factory_path)->make();
-        $this->assertTrue($coll->count() == 10);
+        $this->assertTrue(count($coll) == 10);
         $this->assertTrue(get_class($coll) == Collection::class);
         $new_coll = new Collection(SampleModel::class, $coll->toArray());
         $this->assertSimilarArrays($coll->toArray(), $new_coll->toArray());
