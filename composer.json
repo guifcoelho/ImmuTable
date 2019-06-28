@@ -1,5 +1,5 @@
 {
-  "name": "guifcoelho/JsonModels",
+  "name": "guifcoelho/json-models",
   "description": "Package for using immutable json models instead of regular SQL or NoSql databases with sintax similar to Laravel Eloquent",
   "license": "MIT",
   "keywords": [
