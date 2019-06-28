@@ -12,6 +12,8 @@ use guifcoelho\JsonModels\Tests\Unit\SampleModels\Sample2;
 
 class CollectionTest extends TestCase
 {
+    use \guifcoelho\JsonModels\Testing\Support\ArrayAssertions;
+
     public function test_create_collection_with_not_subclass_of_JsonModel(){
         try{
             $dummy = new Collection('123', []);
@@ -31,6 +33,6 @@ class CollectionTest extends TestCase
 
     public function test_extracting_collection_into_json(){
         $data = jsonModelsFactory(Sample::class, 10, $this->factory_path)->create();
-        $this->arrays()->assertSimilar($data->toArray(), json_decode($data->toJson(), true));
+        $this->assertSimilarArrays($data->toArray(), json_decode($data->toJson(), true));
     }
 }

@@ -4,6 +4,7 @@ namespace guifcoelho\JsonModels;
 
 use guifcoelho\JsonModels\Config;
 use guifcoelho\JsonModels\Query;
+use guifcoelho\JsonModels\Exceptions\JsonModelsException;
 
 class Model{
 
@@ -15,7 +16,7 @@ class Model{
     protected $table = '';
 
     /**
-     * Name of field which will not be returned in toArray() (and similar) function
+     * Name of fields which will not be returned in toArray() (and similar) functions
      *
      * @var array
      */
@@ -23,14 +24,14 @@ class Model{
 
 
     /**
-     * Name of the table's primary key. Unique items will be defined by this.
+     * Name of the table's primary key. Unique items will be defined by this. It must be an integer between 1 and infinity.
      *
      * @var string
      */
     protected $primary_key = 'id';
 
     /**
-     * All table fields. Will be replaced after data loading
+     * All required table fields. If any field name is provided, the data loading will require them.
      *
      * @var array
      */
@@ -81,35 +82,44 @@ class Model{
     }
 
     /**
-     * Loads the data fields into the JsonModel
+     * Loads the data fields into the JsonModel. It will must respect the list of fields constraint.
      *
      * @param array $data
      * @return void
      */
     protected function loadData(array $data):void
     {
-        foreach($data as $field => $value){
-            $this->$field = $value;
-            $this->fields[] = $field;
+        if(count($this->fields) == 0){
+            foreach($data as $field => $value){
+                $this->$field = $value;
+                $this->fields[] = $field;
+            }
+        }else{
+            foreach($this->fields as $field){
+                if(!array_key_exists($field, $data)){
+                    throw new JsonModelsException("Field '{$field}' was not found in the data provided");
+                }
+                $this->$field = $data[$field];
+            }
         }
+        
     }
 
     /**
-     * Static function. Querys the json table
+     * Querys the json table with
      *
      * @param string $field
-     * @param string $sign
-     * @param mixed $value
+     * @param ...$params Must provide comparison sign and value (sign is optional)
+     * 
+     * @return Query
      */
-    public static function where(string $field, ...$params)
+    public static function where(string $field, ...$params):Query
     {
         return (new Query(get_class(new static)))->where($field, ...array_values($params));
     }
 
     /**
-     * Função static. Retorns a collection of JsonModels
-     *
-     * @return Query
+     * Returns all data inside JsonModel table
      */
     public static function all(){
         return (new Query(get_class(new static)))->all();
@@ -118,11 +128,11 @@ class Model{
     /**
      * ```belongsToOne``` relationship
      *
-     * @param $owner_class
+     * @param string $owner_class
      * @param string $field
      * @param string $field_in_owner_class
      */
-    protected function belongsToOne($owner_class, string $field = '', string $field_in_owner_class = ''){
+    protected function belongsToOne(string $owner_class, string $field = '', string $field_in_owner_class = ''){
         $owner_primary_key = $owner_class::getPrimaryKey();
         if($field == ''){
             $owner_std_name = $owner_class::getName();
@@ -137,11 +147,11 @@ class Model{
     /**
      * ```hasMany``` relationship
      *
-     * @param  $child_class
+     * @param  string $child_class
      * @param string $field_in_owned_class
      * @param string $field
      */
-    protected function hasMany($child_class, string $field_in_owned_class = '', string $field = ''){
+    protected function hasMany(string $child_class, string $field_in_owned_class = '', string $field = ''){
         if($field_in_owned_class == ''){
             $owner_std_name = static::getName();
             $field_in_owned_class = "{$owner_std_name}_{$this->primary_key}";
@@ -153,7 +163,7 @@ class Model{
     }
 
     /**
-     * Extracts the data into an array
+     * Extracts the data into an array.
      *
      * @return array
      */

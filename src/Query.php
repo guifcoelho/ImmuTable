@@ -9,12 +9,12 @@ use guifcoelho\JsonModels\Exceptions\JsonModelsException;
 
 class Query{
 
-    protected $model_class;
+    protected $class;
 
     protected $queried;
 
     /**
-     * Creates a Query object
+     * Instanciates a Query object
      *
      * @param array $data
      */
@@ -22,15 +22,17 @@ class Query{
         if(!is_subclass_of($class, Model::class)){
             throw new JsonModelsException("'{$class}' must be a subclass of '".Model::class."'");
         }
-        $this->model_class = $class;
+        $this->class = $class;
     }
 
     /**
-     * Loads table data JsonMachine iterable
+     * Loads table data JsonMachine
+     * 
+     * @param bool $as_stream
      */
     private function loadTable(bool $as_stream = true)
     {
-        $table_path = $this->model_class::getTablePath();
+        $table_path = $this->class::getTablePath();
         if(!file_exists($table_path)){
             return [];
         }
@@ -60,10 +62,16 @@ class Query{
             case '<=': return $el <= $value;
             case '>=': return $el >= $value;
             case '===': return $el === $value;
-            default: throw new JsonModelsException("The second argument must be a comparison sign");
+            default: throw new JsonModelsException("The second argument must be a valid comparison sign");
         }
     }
 
+    /**
+     * Support function. Gets the query arguments
+     *
+     * @param array $args
+     * @return array
+     */
     public static function getQueryArguments(array $args):array
     {
         $sign = "==";
@@ -72,7 +80,7 @@ class Query{
         }
         if(count($args) == 2){
             if(!is_string($args[0]) || strlen($args[0]) > 3){
-                throw new JsonModelsException("The second argument must be a comparison sign");
+                throw new JsonModelsException("The second argument must be a valid comparison sign");
             }
             $sign = $args[0];
             if(!is_numeric($args[1]) && !is_string($args[1])){
@@ -97,13 +105,11 @@ class Query{
     }
 
     /**
-     * Querys the json table
+     * Queries the JsonModel table
      *
-     * @param $model_class
-     * @param string $campo
-     * @param string $comparacao
-     * @param $valor
-     * @return void
+     * @param string $field
+     * @param ...$params Must provide comparison sign and value (sign is optional)
+     * @return self
      */
     public function where(string $field, ...$params):self
     {
@@ -112,36 +118,40 @@ class Query{
         $query = [];
         foreach($data as $item){
             if($this->evalModelItem($item[$field], $args['sign'], $args['value'])){
-                $query[] = $item[$this->model_class::getPrimaryKey()];
+                $query[] = $item[$this->class::getPrimaryKey()];
             }
         }
         $this->queried = $query;
         return $this;
     }  
     
-
+    /**
+     * Queries the json table with orWhere statement
+     *
+     * @param string $field
+     * @param ...$params Must provide comparison sign and value (sign is optional)
+     * @return self
+     */
     public function orWhere(string $field, ...$params):self
     {
         $args = static::getQueryArguments($params);
-        $query = $this->model_class::where($field, $args['sign'], $args['value'])->getQueried();
+        $query = $this->class::where($field, $args['sign'], $args['value'])->getQueried();
         $this->queried = array_unique(array_merge($this->queried, $query));
         return $this;
     }
 
     /**
-     * Returns the first item of the collection
-     *
-     * @return void
+     * Returns the first item of the collection. It will return null if nothing is found
      */
     public function first(){
         if(count($this->queried) == 0){
             return null;
         }
         $data = $this->loadTable();
-        $primary_key = $this->model_class::getPrimaryKey();
+        $primary_key = $this->class::getPrimaryKey();
         foreach($data as $item){
             if($item[$primary_key] == $this->queried[0]){
-                return new $this->model_class($item);
+                return new $this->class($item);
             }
         }
     }
@@ -149,29 +159,29 @@ class Query{
     
 
     /**
-     * Returns all data inside table
+     * Returns all data inside the json table
      *
-     * @return self
+     * @return Collection
      */
-    public function all()
+    public function all():Collection
     {
         $data = $this->loadTable(false);
-        $this->queried = array_values(array_column($data, $this->model_class::getPrimaryKey()));
-        return new Collection($this->model_class, $data);
+        $this->queried = array_values(array_column($data, $this->class::getPrimaryKey()));
+        return new Collection($this->class, $data);
     }
 
     /**
      * Gets the queried collection
      *
-     * @return self
+     * @return Collection
      */
-    public function get()
+    public function get():Collection
     {
         $queried = $this->queried;
         $collection = [];
         if(count($queried) > 0){
             $data = $this->loadTable();
-            $primary_key = $this->model_class::getPrimaryKey();
+            $primary_key = $this->class::getPrimaryKey();
             foreach($data as $item){
                 $item_primary_key_value = $item[$primary_key];
                 if(array_search($item_primary_key_value, $queried) !== false){
@@ -183,19 +193,30 @@ class Query{
             }
             
         }
-        return new Collection($this->model_class, $collection);
+        return new Collection($this->class, $collection);
     }
 
+    /**
+     * Gets the last primary key (as defined in the JsonModel) of the json file
+     *
+     * @return integer
+     */
     public function getLastPrimaryKeyValue():int
     {
         $data = $this->loadTable();
         $last_primary_key_value = 0;
         foreach($data as $item){
-            $last_primary_key_value = max($last_primary_key_value, $item[$this->model_class::getPrimaryKey()]);
+            $last_primary_key_value = max($last_primary_key_value, $item[$this->class::getPrimaryKey()]);
         }
         return $last_primary_key_value;
     }
 
+    /**
+     * Inserts data into the JsonModel table. DO NOT use except for testing or prototyping
+     *
+     * @param array|Collection $data
+     * @return void
+     */
     public function insert($data)
     {
         if(!is_array($data) && !is_object($data) || (is_object($data) && !get_class($data) == Collection::class && !is_subclass_of($data, Collection::class))){
@@ -204,26 +225,26 @@ class Query{
         $current = $this->loadTable();
         $collection = [];
         foreach($current as $item){
-            $collection[] = new $this->model_class($item);
+            $collection[] = new $this->class($item);
         }
         $last_primary_key_value = $this->getLastPrimaryKeyValue();
-        $primary_key = $this->model_class::getPrimaryKey();
+        $primary_key = $this->class::getPrimaryKey();
 
         if(is_array($data)){
-            $data = (new Collection($this->model_class, $data))->extract();
+            $data = (new Collection($this->class, $data))->extract();
         }else{
             $data = $data->extract();
         }
         foreach($data as &$item){
             $item = $item->toArray();
             $item[$primary_key] = ++$last_primary_key_value;
-            $item = new $this->model_class($item);
+            $item = new $this->class($item);
             $collection[] = $item;
         }
-        $collection = (new Collection($this->model_class, $collection));
-        file_put_contents($this->model_class::getTablePath(), json_encode($collection->toArray()));
+        $collection = (new Collection($this->class, $collection));
+        file_put_contents($this->class::getTablePath(), json_encode($collection->toArray()));
 
-        $models_inserted = new Collection($this->model_class, $data);
+        $models_inserted = new Collection($this->class, $data);
         return $models_inserted->count() == 1 ? $models_inserted->extract()[0] : $models_inserted;
     }
 }

@@ -3,12 +3,19 @@
 namespace guifcoelho\JsonModels\Testing\Support;
 
 use PHPUnit\Framework\Assert as PHPUnit;
-use guifcoelho\JsonModels\Testing\Support\ArrayAssertions;
 use guifcoelho\JsonModels\Model;
 
-class JsonTablesAssertions{
+trait JsonTablesAssertions{
 
-    public function assertTableHas($class, array $expected){
+    use \guifcoelho\JsonModels\Testing\Support\ArrayAssertions;
+
+    /**
+     * Asserts if a json model table has the expected data
+     *
+     * @param string $class
+     * @param array $expected
+     */
+    protected function assertJsonTableHas(string $class, array $expected){
         PHPUnit::assertTrue(
             is_subclass_of($class, Model::class),
             "'{$class}' is not a subclass of '".Model::class."'"
@@ -22,7 +29,7 @@ class JsonTablesAssertions{
                 $query[] = $class::where($primary_key, $item[$primary_key])->first()->toArray();
             }
         }
-        return ArrayAssertions::assertSimilar($expected, $query);
+        return $this->assertSimilarArrays($expected, $query);
     }
 
 }

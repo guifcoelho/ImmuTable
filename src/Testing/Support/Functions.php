@@ -6,6 +6,13 @@ use guifcoelho\JsonModels\Config;
 use guifcoelho\JsonModels\Exceptions\JsonModelsException;
 
 if(!function_exists('jsonModelsFactory')){
+
+    /**
+     * Run factory build json models. It should be used solely for testing or prototyping
+     *
+     * @param string $class
+     * @param  ...$params
+     */
     function jsonModelsFactory(string $class, ...$params){
         $size = 1;
         $path = "";

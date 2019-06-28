@@ -7,12 +7,22 @@ use guifcoelho\JsonModels\Model;
 
 class Collection{
 
-    protected $model_class;
-
-    protected $collection;
+    /**
+     * JsonModel class name
+     *
+     * @var string
+     */
+    protected $class = "";
 
     /**
-     * Creates a JsonModelCollection object
+     * The collection array
+     *
+     * @var array
+     */
+    protected $collection = [];
+
+    /**
+     * Creates the Collection object of JsonModels
      *
      * @param string $class
      * @param array $data
@@ -21,19 +31,24 @@ class Collection{
         if(!is_subclass_of($class, Model::class)){
             throw new JsonModelsException("Model class must be a subclass of '".Model::class."'");
         }
-        $this->model_class = $class;
+        $this->class = $class;
         $this->collection = $this->loadData($data);
     }
 
+    /**
+     * Loads the provided data
+     *
+     * @param array $data
+     */
     protected function loadData(array $data){
         $self = $this;        
         return array_map(function($el) use($self){
             if(is_array($el)){
-                return new $self->model_class($el);
-            }elseif(get_class($el) == $self->model_class){
+                return new $self->class($el);
+            }elseif(get_class($el) == $self->class){
                 return $el;
             }else{
-                throw new JsonModelsException("Data must be either 'array' or '{$self->model_class}'");
+                throw new JsonModelsException("Data must be either 'array' or '{$self->class}'");
             }
         }, $data);
     }
@@ -50,7 +65,7 @@ class Collection{
     }
 
     /**
-     * Extracts collection into array
+     * Extracts recursively the collection into array
      *
      * @return array
      */
@@ -72,7 +87,11 @@ class Collection{
         return json_encode($this->toArray());
     }
 
-
+    /**
+     * Counts the number of JsonModels inside the collection
+     *
+     * @return integer
+     */
     public function count():int
     {
         if($this->collection == null){
@@ -81,7 +100,12 @@ class Collection{
         return count($this->collection);
     }
 
-    public function extract(){
+    /**
+     * Extracts the collection of JsonModels
+     *
+     * @return array
+     */
+    public function extract():array{
         return $this->collection;
     }
 }

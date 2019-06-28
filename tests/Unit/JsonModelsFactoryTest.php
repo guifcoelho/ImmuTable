@@ -13,12 +13,14 @@ use guifcoelho\JsonModels\Tests\Unit\SampleModels\SampleWithoutFactory;
 
 class JsonModelsFactoryTest extends TestCase
 {
+    use \guifcoelho\JsonModels\Testing\Support\JsonTablesAssertions;
+    
     public function test_making_one_json_model()
     {
         $model = jsonModelsFactory(SampleModel::class, $this->factory_path)->make();
         $this->assertTrue(is_subclass_of($model, Model::class));
         $new_model = new SampleModel($model->toArray());
-        $this->arrays()->assertSimilar($model->toArray(), $new_model->toArray());
+        $this->assertSimilarArrays($model->toArray(), $new_model->toArray());
     }
 
     public function test_making_many_json_models()
@@ -27,19 +29,19 @@ class JsonModelsFactoryTest extends TestCase
         $this->assertTrue($coll->count() == 10);
         $this->assertTrue(get_class($coll) == Collection::class);
         $new_coll = new Collection(SampleModel::class, $coll->toArray());
-        $this->arrays()->assertSimilar($coll->toArray(), $new_coll->toArray());
+        $this->assertSimilarArrays($coll->toArray(), $new_coll->toArray());
     }
 
     public function test_creating_one_json_models()
     {
         $model = jsonModelsFactory(SampleModel::class, $this->factory_path)->create();
-        $this->jsontables()->assertTableHas(SampleModel::class, $model->toArray());
+        $this->assertJsonTableHas(SampleModel::class, $model->toArray());
     }
 
     public function test_creating_many_json_models()
     {
         $collection = jsonModelsFactory(SampleModel::class, 10, $this->factory_path)->create();
-        $this->jsontables()->assertTableHas(SampleModel::class, $collection->toArray());
+        $this->assertJsonTableHas(SampleModel::class, $collection->toArray());
     }
 
     public function test_for_model_without_factory(){

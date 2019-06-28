@@ -7,8 +7,6 @@ use guifcoelho\JsonModels\Exceptions\ConfigFileNotFoundException;
 
 /**
  * Class Config
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
  */
 class Config
 {

@@ -2,23 +2,12 @@
 
 namespace guifcoelho\JsonModels\Testing;
 
-use guifcoelho\JsonModels\Testing\Support\ArrayAssertions;
-use guifcoelho\JsonModels\Testing\Support\JsonTablesAssertions;
 use guifcoelho\JsonModels\Model;
 use guifcoelho\JsonModels\Config;
 use Symfony\Component\Finder\Finder;
 
 trait TestingJsonModels
 {
-
-    protected function arrays():ArrayAssertions{
-        return new ArrayAssertions();
-    }
-
-    protected function jsontables():JsonTablesAssertions{
-        return new JsonTablesAssertions();
-    }
-
     protected function bootstrap():void{
         require __DIR__."/Support/Functions.php";
         $this->setTablesPath();
