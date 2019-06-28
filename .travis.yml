@@ -15,6 +15,8 @@ cache:
   directories:
     - $HOME/.composer/cache
 
-after_success:
-  curl -XPOST -H'content-type:application/json' 'https://packagist.org/api/update-package?username=guifcoelho&apiToken=${PACKAGIST_TOKEN}' -d'{"repository":{"url":"https://packagist.org/packages/guifcoelho/json-models"}}'
-
+deploy:
+  provider: script
+  script: curl -XPOST -H'content-type:application/json' 'https://packagist.org/api/update-package?username=guifcoelho&apiToken=${PACKAGIST_TOKEN}' -d'{"repository":{"url":"https://packagist.org/packages/guifcoelho/json-models"}}'
+  on:
+    branch: master
