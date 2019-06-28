@@ -2,7 +2,7 @@
 ![Code Coverage Status](tests/report/coverage.svg)
 
 
-# guifcoelho\JsonModels
+# JsonModels
 
 Package for using immutable json models instead of regular SQL or NoSQL databases with sintax similar to Laravel Eloquent.
 
