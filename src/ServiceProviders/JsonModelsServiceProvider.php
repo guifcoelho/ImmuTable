@@ -45,21 +45,21 @@ class JsonModelsServiceProvider extends ServiceProvider
         | Implementation Bindings
         |--------------------------------------------------------------------------
         */
-        $this->implementationBindings();
+        // $this->implementationBindings();
 
         /*
         |--------------------------------------------------------------------------
         | Facade Bindings
         |--------------------------------------------------------------------------
         */
-        $this->facadeBindings();
+        // $this->facadeBindings();
 
         /*
         |--------------------------------------------------------------------------
         | Registering Service Providers
         |--------------------------------------------------------------------------
         */
-        $this->serviceProviders();
+        // $this->serviceProviders();
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace guifcoelho\JsonModels;
 
+use guifcoelho\JsonModels\Exceptions\JsonModelsException;
 use guifcoelho\JsonModels\Model;
 
 class Collection{
@@ -13,11 +14,12 @@ class Collection{
     /**
      * Creates a JsonModelCollection object
      *
+     * @param string $class
      * @param array $data
      */
-    public function __construct($class, array $data = []){
+    public function __construct(string $class, array $data = []){
         if(!is_subclass_of($class, Model::class)){
-            throw new \Exception("'{$class}' must be a subclass of '".Model::class."'");
+            throw new JsonModelsException("Model class must be a subclass of '".Model::class."'");
         }
         $this->model_class = $class;
         $this->collection = $this->loadData($data);
@@ -31,7 +33,7 @@ class Collection{
             }elseif(get_class($el) == $self->model_class){
                 return $el;
             }else{
-                throw new \Exception("Data must be either array or '{$self->model_class}'");
+                throw new JsonModelsException("Data must be either 'array' or '{$self->model_class}'");
             }
         }, $data);
     }
@@ -73,7 +75,10 @@ class Collection{
 
     public function count():int
     {
-        return count($this->collection == null ? [] : $this->collection);
+        if($this->collection == null){
+            return 0;
+        }
+        return count($this->collection);
     }
 
     public function extract(){

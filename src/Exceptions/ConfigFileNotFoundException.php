@@ -1,7 +1,9 @@
 <?php
 namespace guifcoelho\JsonModels\Exceptions;
 
+use guifcoelho\JsonModels\Exceptions\JsonModelsException;
+
 /**
  * Class ConfigFileNotFoundException
  */
-class ConfigFileNotFoundException extends Exception{}
+class ConfigFileNotFoundException extends JsonModelsException{}

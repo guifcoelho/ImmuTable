@@ -5,15 +5,15 @@ namespace guifcoelho\JsonModels\Tests\Unit\SampleModels;
 use guifcoelho\JsonModels\Model;
 use guifcoelho\JsonModels\Tests\Unit\SampleModels\Sample;
 
-class SampleOwned extends Model
+class SampleOwned2 extends Model
 {
 
-    protected $fillable = ['id', 'sample_id'];
+    protected $fillable = ['id', 'owner'];
 
-    protected $table = "test_table_owned";
+    protected $table = "test_table_owned2";
 
     public function owner(){
-        return $this->belongsToOne(Sample::class);
+        return $this->belongsToOne(Sample::class, 'owner');
     }
 
 }

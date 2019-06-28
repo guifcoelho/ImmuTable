@@ -5,6 +5,7 @@ namespace guifcoelho\JsonModels;
 use JsonMachine\JsonMachine;
 use guifcoelho\JsonModels\Model;
 use guifcoelho\JsonModels\Collection;
+use guifcoelho\JsonModels\Exceptions\JsonModelsException;
 
 class Query{
 
@@ -17,9 +18,9 @@ class Query{
      *
      * @param array $data
      */
-    public function __construct($class){
+    public function __construct(string $class){
         if(!is_subclass_of($class, Model::class)){
-            throw new \Exception("'{$class}' must be a subclass of '".Model::class."'");
+            throw new JsonModelsException("'{$class}' must be a subclass of '".Model::class."'");
         }
         $this->model_class = $class;
     }
@@ -59,8 +60,30 @@ class Query{
             case '<=': return $el <= $value;
             case '>=': return $el >= $value;
             case '===': return $el === $value;
-            default: throw new \Exception("The second argument must be a comparison sign");
+            default: throw new JsonModelsException("The second argument must be a comparison sign");
         }
+    }
+
+    public static function getQueryArguments(array $args):array
+    {
+        $sign = "==";
+        if(count($args) == 1){
+            $value = $args[0];
+        }
+        if(count($args) == 2){
+            if(!is_string($args[0]) || strlen($args[0]) > 3){
+                throw new JsonModelsException("The second argument must be a comparison sign");
+            }
+            $sign = $args[0];
+            if(!is_numeric($args[1]) && !is_string($args[1])){
+                throw new JsonModelsException("The third argument must be either a number or a string");
+            }
+            $value = $args[1];
+        }
+        return [
+            'sign' => $sign,
+            'value' => $value
+        ];
     }
 
     /**
@@ -82,12 +105,13 @@ class Query{
      * @param $valor
      * @return void
      */
-    public function where(string $field, string $sign, $value):self
+    public function where(string $field, ...$params):self
     {
+        $args = static::getQueryArguments($params);
         $data = $this->loadTable();
         $query = [];
         foreach($data as $item){
-            if($this->evalModelItem($item[$field], $sign, $value)){
+            if($this->evalModelItem($item[$field], $args['sign'], $args['value'])){
                 $query[] = $item[$this->model_class::getPrimaryKey()];
             }
         }
@@ -96,9 +120,10 @@ class Query{
     }  
     
 
-    public function orWhere(string $field, string $sign, $value):self
+    public function orWhere(string $field, ...$params):self
     {
-        $query = $this->model_class::where($field, $sign, $value)->getQueried();
+        $args = static::getQueryArguments($params);
+        $query = $this->model_class::where($field, $args['sign'], $args['value'])->getQueried();
         $this->queried = array_unique(array_merge($this->queried, $query));
         return $this;
     }
@@ -109,6 +134,9 @@ class Query{
      * @return void
      */
     public function first(){
+        if(count($this->queried) == 0){
+            return null;
+        }
         $data = $this->loadTable();
         $primary_key = $this->model_class::getPrimaryKey();
         foreach($data as $item){
@@ -129,7 +157,7 @@ class Query{
     {
         $data = $this->loadTable(false);
         $this->queried = array_values(array_column($data, $this->model_class::getPrimaryKey()));
-        return count($data) == 0 ? null : new Collection($this->model_class, $data);
+        return new Collection($this->model_class, $data);
     }
 
     /**
@@ -155,7 +183,7 @@ class Query{
             }
             
         }
-        return count($collection) == 0 ? null : new Collection($this->model_class, $collection);
+        return new Collection($this->model_class, $collection);
     }
 
     public function getLastPrimaryKeyValue():int
@@ -170,8 +198,8 @@ class Query{
 
     public function insert($data)
     {
-        if(!is_array($data) && is_subclass_of($data, Collection::class)){
-            throw new Exception("Data to be inserted must array or subclass of '".Collection::class."'");
+        if(!is_array($data) && !is_object($data) || (is_object($data) && !get_class($data) == Collection::class && !is_subclass_of($data, Collection::class))){
+            throw new JsonModelsException("Data to be inserted must 'array' or subclass of '".Collection::class."'");
         }
         $current = $this->loadTable();
         $collection = [];

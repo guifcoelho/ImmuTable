@@ -7,5 +7,5 @@ use Exception as CoreException;
 /**
  * Class Exception
  */
-class Exception extends CoreException{}
+class JsonModelsException extends CoreException{}
 

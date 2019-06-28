@@ -2,33 +2,31 @@
 
 use guifcoelho\JsonModels\Model;
 use guifcoelho\JsonModels\Factory;
+use guifcoelho\JsonModels\Config;
+use guifcoelho\JsonModels\Exceptions\JsonModelsException;
 
-if(!function_exists('jsonModelFactory')){
-    function jsonModelFactory($class, ...$params){
-        $args = func_get_args();
+if(!function_exists('jsonModelsFactory')){
+    function jsonModelsFactory(string $class, ...$params){
         $size = 1;
         $path = "";
-        if(count($args) == 2){
-            $size = is_int($args[1]) ? $args[1] : 1;
-            $path = is_string($args[1]) ? $args[1] : "";
-            if(!is_int($args[1]) && !is_string($args[1])){
-                throw new \Exception("Second argument must be either integer or string");
+        if(count($params) == 1){
+            $size = is_int($params[0]) ? $params[0] : 1;
+            $path = is_string($params[0]) ? $params[0] : "";
+            if(!is_int($params[0]) && !is_string($params[0])){
+                throw new JsonModelsException("Second argument must either be the size of collection or the path to factories");
             }
         }
-        if(count($args) == 3){
-            if(!is_int($args[1])){
-                throw new \Exception("Second argument must be integer");
+        if(count($params) == 2){
+            if(!is_int($params[0]) || !is_string($params[1])){
+                throw new JsonModelsException("Second argument must be integer and third argument must be string");
             }
-            $size = $args[1];
-            if(!is_string($args[2])){
-                throw new \Exception("Third argument must be string");
-            }
-            $path = $args[2];
+            $size = $params[0];
+            $path = $params[1];
         }
         
-        if(get_parent_class($class) == Model::class){
-            return (new Factory($class, $size, $path))->load();
+        if(!is_subclass_of($class, Model::class)){
+            throw new JsonModelsException("The model class must be a subclass of '".Model::class."'");
         }
-        throw new \Exception("'{$class}' must be a subclass of '".Model::class."'");
+        return (new Factory($class, $size, $path))->load();
     }
 }

@@ -4,32 +4,40 @@ namespace guifcoelho\JsonModels\Testing;
 
 use guifcoelho\JsonModels\Testing\Support\ArrayAssertions;
 use guifcoelho\JsonModels\Testing\Support\JsonTablesAssertions;
-use guifcoelho\JsonModels\Factory;
 use guifcoelho\JsonModels\Model;
-use guifcoelho\JsonModels\Exceptions\Exception;
 use guifcoelho\JsonModels\Config;
+use Symfony\Component\Finder\Finder;
 
 trait TestingJsonModels
 {
-    public function setUp():void
-    {
-        parent::setUp();
-        $this->bootstrap();
-    }
 
-    protected function arrays(){
+    protected function arrays():ArrayAssertions{
         return new ArrayAssertions();
     }
 
-    protected function jsontables(){
+    protected function jsontables():JsonTablesAssertions{
         return new JsonTablesAssertions();
     }
 
-    public function bootstrap(){
+    protected function bootstrap():void{
         require __DIR__."/Support/Functions.php";
+        $this->setTablesPath();
+    }
+
+    protected function setTablesPath():void
+    {    
         $tables_path = (new Config)->get('path_to_tables');
         if(!file_exists($tables_path)){
             mkdir($tables_path, 0777, true);
+        }
+    }
+
+    protected function refreshJsonModels():void{
+        $path = (new Config)->get('path_to_tables');
+        if (is_dir($path)) {
+            foreach (Finder::create()->files()->name('*.json')->in($path) as $file) {
+                unlink($file->getRealPath());
+            }
         }
     }
 }

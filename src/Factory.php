@@ -5,6 +5,7 @@ namespace guifcoelho\JsonModels;
 use Symfony\Component\Finder\Finder;
 use guifcoelho\JsonModels\Model;
 use guifcoelho\JsonModels\Collection;
+use guifcoelho\JsonModels\Exceptions\JsonModelsException;
 
 class Factory{
 
@@ -58,7 +59,7 @@ class Factory{
 
     protected function buildData(array $attributes = []){
         if(!array_key_exists($this->class, $this->definitions)){
-            throw new \Exception("No definitions set for class '{$this->class}'");
+            throw new JsonModelsException("No definitions set for class '{$this->class}'");
         }
         $collection = [];
         foreach(range(1, $this->size) as $item){
