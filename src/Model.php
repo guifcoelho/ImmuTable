@@ -141,7 +141,7 @@ class Model{
         if($field_in_owner_class == ''){
             $field_in_owner_class = $owner_primary_key;
         }
-        return $owner_class::where($field_in_owner_class, $this->$field);
+        return $owner_class::where($field_in_owner_class, $this->$field)->first();
     }
 
     /**
@@ -159,7 +159,7 @@ class Model{
         if($field == ''){
             $field = $this->primary_key;
         }
-        return $child_class::where($field_in_owned_class, $this->$field);
+        return $child_class::where($field_in_owned_class, $this->$field)->get();
     }
 
     /**

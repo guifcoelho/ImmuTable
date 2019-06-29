@@ -9,9 +9,9 @@ use guifcoelho\JsonModels\Exceptions\JsonModelsException;
 
 class Query{
 
-    protected $class;
+    protected $class = '';
 
-    protected $queried;
+    protected $queried = [];
 
     /**
      * Instanciates a Query object
@@ -54,11 +54,10 @@ class Query{
     private function evalModelItem($el, string $sign, $value):bool
     {
         switch($sign){
+            case '=':
+            case '==': return $el == $value;
             case '<': return $el < $value;
             case '>': return $el > $value;
-            case '<=': return $el <= $value;
-            case '>=': return $el >= $value;
-            case '==': return $el == $value;
             case '<=': return $el <= $value;
             case '>=': return $el >= $value;
             case '===': return $el === $value;
@@ -114,14 +113,27 @@ class Query{
     public function where(string $field, ...$params):self
     {
         $args = static::getQueryArguments($params);
-        $data = $this->loadTable();
-        $query = [];
-        foreach($data as $item){
-            if($this->evalModelItem($item[$field], $args['sign'], $args['value'])){
-                $query[] = $item[$this->class::getPrimaryKey()];
+        $primary_key_name = $this->class::getPrimaryKey();
+        if(count($this->queried) == 0){
+            $data = $this->loadTable();
+            $query = [];
+            foreach($data as $item){
+                if($this->evalModelItem($item[$field], $args['sign'], $args['value'])){
+                    $query[] = $item[$primary_key_name];
+                }
             }
+            $this->queried = $query;
+        }else{
+            $collection = $this->get();
+            $query = [];
+            foreach($collection as $item){
+                if($this->evalModelItem($item->$field, $args['sign'], $args['value'])){
+                    $query[] = $item->$primary_key_name;
+                }
+            }
+            $this->queried = $query;
         }
-        $this->queried = $query;
+        
         return $this;
     }  
     

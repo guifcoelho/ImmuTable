@@ -37,8 +37,10 @@
     }
   },
   "scripts": {
-    "run-tests-win": ".\\vendor\\bin\\phpunit --coverage-clover tests\\report\\coverage.xml --coverage-html tests\\report\\coverage-html && composer build-coverage-badge-win",
-    "run-tests-linux": "./vendor/bin/phpunit --coverage-clover tests/report/coverage.xml --coverage-html tests/report/coverage-html && composer build-coverage-badge-linux",
+    "tests-win": ".\\vendor\\bin\\phpunit",
+    "tests-linux": "./vendor/bin/phpunit",
+    "tests-report-win": ".\\vendor\\bin\\phpunit --coverage-clover tests\\report\\coverage.xml --coverage-html tests\\report\\coverage-html && composer build-coverage-badge-win",
+    "tests-report-linux": "./vendor/bin/phpunit --coverage-clover tests/report/coverage.xml --coverage-html tests/report/coverage-html && composer build-coverage-badge-linux",
     "build-coverage-badge-win": ".\\vendor\\bin\\php-coverage-badger tests\\report\\coverage.xml tests\\report\\coverage.svg",
     "build-coverage-badge-linux": "./vendor/bin/php-coverage-badger tests/report/coverage.xml tests/report/coverage.svg"
   },

@@ -23,7 +23,8 @@ trait JsonTablesAssertions{
         $primary_key = $class::getPrimaryKey();
         $query = [];
         if(array_key_exists($primary_key, $expected)){
-            $query = $class::where($primary_key, $expected[$primary_key])->first()->toArray();
+            $query = $class::where($primary_key, $expected[$primary_key]);
+            $query = $query->first()->toArray();
         }else{
             foreach($expected as $item){
                 $query[] = $class::where($primary_key, $item[$primary_key])->first()->toArray();

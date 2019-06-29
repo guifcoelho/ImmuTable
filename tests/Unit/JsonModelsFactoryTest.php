@@ -54,7 +54,7 @@ class JsonModelsFactoryTest extends TestCase
 
     public function test_factory_function_with_non_json_model_class(){
         try{
-            $dummy = jsonModelsFactory(123);
+            $dummy = jsonModelsFactory('123');
         }catch(JsonModelsException $e){
             $this->assertTrue($e->getMessage() == "The model class must be a subclass of '".Model::class."'");
         }
@@ -91,4 +91,5 @@ class JsonModelsFactoryTest extends TestCase
             $this->assertTrue($e->getMessage() == "Second argument must be integer and third argument must be string");
         }
     }
+    
 }

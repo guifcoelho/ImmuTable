@@ -2,5 +2,5 @@ docker run --rm --interactive --tty \
   --volume $PWD/../:/app \
   -w /app \
   --user $(id -u):$(id -g) \
-  composer:latest \
+  guifcoelho:php-7.3-xdebug \
   composer "$@"

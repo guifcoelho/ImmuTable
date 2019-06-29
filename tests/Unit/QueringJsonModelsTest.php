@@ -111,6 +111,15 @@ class CreateModelTest extends TestCase
         $this->assertTrue($query == null);
     }
 
+    public function test_querying_with_where_chaining(){
+        $dummy = jsonModelsFactory(Sample::class, 10, $this->factory_path)->create();
+        $ids = array_column($dummy->toArray(), 'id');
+        $collection = Sample::where('id', '>=', $ids[0])
+                            ->where('id', '<', max($ids)/2)
+                            ->get();
+        $this->assertTrue(count($collection) == 10/2-1);
+    }
+
     public function test_querying_orWhere(){
         $dummy1 = jsonModelsFactory(Sample::class, $this->factory_path)->create();
         $dummy2 = jsonModelsFactory(Sample::class, $this->factory_path)->create();
