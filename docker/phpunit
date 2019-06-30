@@ -1,6 +1,0 @@
-docker run --rm \
-    --user $(id -u):$(id -g) \
-    -v $PWD/../:/app \
-    -w /app \
-    guifcoelho:php-7.3-xdebug \
-    ./vendor/bin/phpunit

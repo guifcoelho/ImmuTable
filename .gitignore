@@ -18,3 +18,5 @@ Thumbs.db
 
 .phpunit.*
 composer.lock
+
+.composer

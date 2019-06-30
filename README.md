@@ -20,5 +20,5 @@ DO NOT use this package if your models' data are likely to change.
 2. With Docker
    - `cd docker`
    - `bash build`
-   - Only tests: `bash phpunit`
+   - Only tests: `bash composer tests-[linux|win]`
    - Tests and coverage report: `bash composer tests-report-[linux|win]`
