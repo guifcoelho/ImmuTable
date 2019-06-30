@@ -4,7 +4,7 @@ namespace guifcoelho\JsonModels;
 
 use Symfony\Component\Finder\Finder;
 use guifcoelho\JsonModels\Model;
-use guifcoelho\JsonModels\Collection;
+use Illuminate\Support\Collection;
 use guifcoelho\JsonModels\Exceptions\JsonModelsException;
 
 class Factory{
@@ -105,12 +105,13 @@ class Factory{
                 $definitions[$key] = $value;
             }
             $definitions[$this->class::getPrimaryKey()] = '';
-            $collection[] = $definitions;
+            $collection[] = new $this->class($definitions);
         }
         if($this->size == 1){
-            return new $this->class($collection[0]);
+            return $collection[0];
         }
-        return new Collection($this->class, $collection);
+        
+        return new Collection($collection);
     }
 
     /**

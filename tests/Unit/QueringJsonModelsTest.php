@@ -7,7 +7,7 @@ use guifcoelho\JsonModels\Exceptions\JsonModelsException;
 
 use guifcoelho\JsonModels\Query;
 use guifcoelho\JsonModels\Model;
-use guifcoelho\JsonModels\Collection;
+use Illuminate\Support\Collection;
 
 use guifcoelho\JsonModels\Tests\Unit\SampleModels\Sample;
 use guifcoelho\JsonModels\Tests\Unit\SampleModels\Sample3;
@@ -22,22 +22,24 @@ class CreateModelTest extends TestCase
     {
         $data = jsonModelsFactory(Sample::class, 10, $this->factory_path)->create();
         file_put_contents(Sample::getTablePath(), json_encode($data->toArray()));
-        $model_data = Sample::all()->toArray();
-        $this->assertSimilarArrays($data->toArray(), $model_data);
+        $model_data = Sample::all();
+        $this->assertTrue(get_class($model_data) == Collection::class);
+        $this->assertSimilarArrays($data->toArray(), $model_data->toArray());
     }
 
     public function test_query_json_model()
     {
         $data = jsonModelsFactory(Sample::class, 10, $this->factory_path)->create();
         file_put_contents(Sample::getTablePath(), json_encode($data->toArray()));
-        $model_data = Sample::where('id', '>', 5)->get()->toArray();
+        $model_data = Sample::where('id', '>', 5)->get();
+        $this->assertTrue(get_class($model_data) == Collection::class);
         $filter_data = [];
         foreach($data as $item){
             if($item->id > 5){
                 $filter_data[] = $item->toArray();
             }
         }
-        $this->assertSimilarArrays($filter_data, $model_data);
+        $this->assertSimilarArrays($filter_data, $model_data->toArray());
     }
 
     public function test_get_queried(){
@@ -144,4 +146,19 @@ class CreateModelTest extends TestCase
         $this->assertJsonTableHas(Sample4::class, $data->toArray());
     }
 
+    public function test_inserting_array_of_data(){
+        $dummy = jsonModelsFactory(Sample::class, 10, $this->factory_path)->make();
+        $arr_dummy = $dummy->toArray();
+        $models_inserted = (new Query(Sample::class))->insert($arr_dummy);
+        $arr_inserted = $models_inserted->toArray();
+        $this->assertJsonTableHas(Sample::class, $arr_inserted);
+        
+        foreach(range(0, count($dummy)-1) as $i){
+            foreach(array_keys($arr_dummy[0]) as $key){
+                if($key != 'id'){
+                    $this->assertTrue($arr_dummy[$i][$key] === $arr_inserted[$i][$key]);
+                }
+            }
+        }
+    }
 }

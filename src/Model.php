@@ -5,8 +5,9 @@ namespace guifcoelho\JsonModels;
 use guifcoelho\JsonModels\Config;
 use guifcoelho\JsonModels\Query;
 use guifcoelho\JsonModels\Exceptions\JsonModelsException;
+use Illuminate\Contracts\Support\Arrayable;
 
-class Model{
+class Model implements Arrayable{
 
     /**
      * Table name
@@ -82,7 +83,7 @@ class Model{
     }
 
     /**
-     * Loads the data fields into the JsonModel. It will must respect the list of fields constraint.
+     * Loads the data fields into the JsonModel. It will respect the listed fields.
      *
      * @param array $data
      * @return void

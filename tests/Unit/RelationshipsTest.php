@@ -55,6 +55,4 @@ class RelationshipsTest extends TestCase
             $this->assertTrue($item->owner == $owner->id);
         }
     }
-
-    
 }

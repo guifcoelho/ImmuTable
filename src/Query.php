@@ -4,7 +4,7 @@ namespace guifcoelho\JsonModels;
 
 use JsonMachine\JsonMachine;
 use guifcoelho\JsonModels\Model;
-use guifcoelho\JsonModels\Collection;
+use Illuminate\Support\Collection;
 use guifcoelho\JsonModels\Exceptions\JsonModelsException;
 
 class Query{
@@ -178,8 +178,10 @@ class Query{
     public function all():Collection
     {
         $data = $this->loadTable(false);
-        $this->queried = array_values(array_column($data, $this->class::getPrimaryKey()));
-        return new Collection($this->class, $data);
+        foreach($data as &$item){
+            $item = new $this->class($item);
+        }
+        return new Collection($data);
     }
 
     /**
@@ -197,7 +199,7 @@ class Query{
             foreach($data as $item){
                 $item_primary_key_value = $item[$primary_key];
                 if(array_search($item_primary_key_value, $queried) !== false){
-                    $collection[] = $item;
+                    $collection[] = new $this->class($item);
                     $queried = array_filter($queried, function($el) use($item_primary_key_value){
                         return $el != $item_primary_key_value;
                     });
@@ -205,7 +207,7 @@ class Query{
             }
             
         }
-        return new Collection($this->class, $collection);
+        return new Collection($collection);
     }
 
     /**
@@ -243,19 +245,24 @@ class Query{
         $primary_key = $this->class::getPrimaryKey();
 
         if(is_array($data)){
-            $data = (new Collection($this->class, $data));
+            foreach($data as &$item){
+                if(is_array($item)){
+                    $item = new $this->class($item);
+                }
+            }
+            $data = new Collection($data);
         }
-        
         foreach(range(0,count($data)-1) as $i){
             $data[$i]->$primary_key = ++$last_primary_key_value;
             $data[$i] = new $this->class($data[$i]->toArray());
             $collection[] = $data[$i];
         }
-
-        $collection = (new Collection($this->class, $collection));
+        
+        $collection = new Collection($collection);
         file_put_contents($this->class::getTablePath(), json_encode($collection->toArray()));
+        
+        $models_inserted = new Collection($data);
 
-        $models_inserted = new Collection($this->class, $data->toArray());
         return count($models_inserted) == 1 ? $models_inserted[0] : $models_inserted;
     }
 }

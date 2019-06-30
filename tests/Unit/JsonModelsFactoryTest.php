@@ -6,7 +6,7 @@ use guifcoelho\JsonModels\Tests\TestCase;
 use guifcoelho\JsonModels\Exceptions\JsonModelsException;
 
 use guifcoelho\JsonModels\Model;
-use guifcoelho\JsonModels\Collection;
+use Illuminate\Support\Collection;
 
 use guifcoelho\JsonModels\Tests\Unit\SampleModels\Sample as SampleModel;
 use guifcoelho\JsonModels\Tests\Unit\SampleModels\SampleWithoutFactory;
@@ -18,7 +18,7 @@ class JsonModelsFactoryTest extends TestCase
     public function test_making_one_json_model()
     {
         $model = jsonModelsFactory(SampleModel::class, $this->factory_path)->make();
-        $this->assertTrue(is_subclass_of($model, Model::class));
+        $this->assertTrue(get_class($model) == SampleModel::class);
         $new_model = new SampleModel($model->toArray());
         $this->assertSimilarArrays($model->toArray(), $new_model->toArray());
     }
@@ -28,19 +28,25 @@ class JsonModelsFactoryTest extends TestCase
         $coll = jsonModelsFactory(SampleModel::class, 10, $this->factory_path)->make();
         $this->assertTrue(count($coll) == 10);
         $this->assertTrue(get_class($coll) == Collection::class);
-        $new_coll = new Collection(SampleModel::class, $coll->toArray());
-        $this->assertSimilarArrays($coll->toArray(), $new_coll->toArray());
+        foreach($coll as $item){
+            $this->assertTrue(get_class($item) == SampleModel::class);
+        }
     }
 
     public function test_creating_one_json_models()
     {
         $model = jsonModelsFactory(SampleModel::class, $this->factory_path)->create();
+        $this->assertTrue(get_class($model) == SampleModel::class);
         $this->assertJsonTableHas(SampleModel::class, $model->toArray());
     }
 
     public function test_creating_many_json_models()
     {
         $collection = jsonModelsFactory(SampleModel::class, 10, $this->factory_path)->create();
+        $this->assertTrue(get_class($collection) == Collection::class);
+        foreach($collection as $item){
+            $this->assertTrue(get_class($item) == SampleModel::class);
+        }
         $this->assertJsonTableHas(SampleModel::class, $collection->toArray());
     }
 

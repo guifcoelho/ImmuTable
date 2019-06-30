@@ -6,7 +6,7 @@ use guifcoelho\JsonModels\Tests\Unit\SampleModels\Sample;
 
 $factory->define(SampleOwned::class, function(Faker $faker){
     return [
-        'sample_id' => Sample::all()->shuffle()->extract()[0]->id
+        'sample_id' => Sample::all()->shuffle()->first()->id
     ];
 });
 
