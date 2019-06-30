@@ -16,7 +16,7 @@
   ],
   "require": {
     "php": "~7.3",
-    "illuminate/config": "5.8.*",
+    "illuminate/config": "^5.8",
     "fzaninotto/faker": "^1.8",
     "halaxa/json-machine": "^0.3.2",
     "symfony/var-dumper": "^4.3",
