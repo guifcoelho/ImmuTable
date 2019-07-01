@@ -4,6 +4,7 @@ namespace guifcoelho\JsonModels;
 
 use Symfony\Component\Finder\Finder;
 use guifcoelho\JsonModels\Model;
+use guifcoelho\JsonModels\Client;
 use Illuminate\Support\Collection;
 use guifcoelho\JsonModels\Exceptions\JsonModelsException;
 
@@ -107,9 +108,11 @@ class Factory{
             $definitions[$this->class::getPrimaryKey()] = '';
             $collection[] = new $this->class($definitions);
         }
+        
         if($this->size == 1){
             return $collection[0];
         }
+        
         
         return new Collection($collection);
     }
@@ -135,12 +138,23 @@ class Factory{
      */
     public function create(array $attributes = []){
         $data_built = $this->buildData($attributes);
-        $data_built = is_subclass_of($data_built, Model::class) ? [$data_built] : $data_built;
         /*
         | Run afterCreating() methods...
         */
-        $models_created = (new Query($this->class))->insert($data_built);
-        return $models_created;
+        $primary_key = $this->class::getPrimaryKey();
+        $client = new Query($this->class);
+        $last_primary_key = $client->getLastPrimaryKeyValue();
+
+        if(is_subclass_of($data_built, Model::class)){
+            $data_built->$primary_key = ++$last_primary_key;
+        }else{
+            foreach($data_built as $item){
+                $item->$primary_key = ++$last_primary_key;
+            }
+        }
+
+        $client->fill($data_built);
+        return $data_built;
     }
 
 }

@@ -4,6 +4,7 @@ namespace guifcoelho\JsonModels;
 
 use JsonMachine\JsonMachine;
 use guifcoelho\JsonModels\Model;
+use guifcoelho\JsonModels\Engine;
 use Illuminate\Support\Collection;
 use guifcoelho\JsonModels\Exceptions\JsonModelsException;
 
@@ -23,24 +24,6 @@ class Query{
             throw new JsonModelsException("'{$class}' must be a subclass of '".Model::class."'");
         }
         $this->class = $class;
-    }
-
-    /**
-     * Loads table data JsonMachine
-     * 
-     * @param bool $as_stream
-     */
-    private function loadTable(bool $as_stream = true)
-    {
-        $table_path = $this->class::getTablePath();
-        if(!file_exists($table_path)){
-            return [];
-        }
-        if($as_stream){
-            return JsonMachine::fromFile($table_path);
-        }else{
-            return json_decode(file_get_contents($table_path), true);
-        }
     }
 
     /**
@@ -112,16 +95,27 @@ class Query{
      */
     public function where(string $field, ...$params):self
     {
+        $engine = new Engine($this->class);
         $args = static::getQueryArguments($params);
         $primary_key_name = $this->class::getPrimaryKey();
         if(count($this->queried) == 0){
-            $data = $this->loadTable();
-            $query = [];
-            foreach($data as $item){
-                if($this->evalModelItem($item[$field], $args['sign'], $args['value'])){
-                    $query[] = $item[$primary_key_name];
-                }
+            $self = $this;
+            $data = $engine->filter(function($item) use($self, $field, $args){
+                return $self->evalModelItem($item->$field, $args['sign'], $args['value']);
+            });
+            
+            if($data == null){
+                $data = [];
+            }elseif(is_subclass_of($data, Model::class)){
+                $data = [$data->toArray()];
+            }else{
+                $data = $data->toArray();
             }
+
+            $query = array_values(array_map(function($item) use($primary_key_name){
+                return $item[$primary_key_name];
+            }, $data));
+
             $this->queried = $query;
         }else{
             $collection = $this->get();
@@ -132,8 +126,8 @@ class Query{
                 }
             }
             $this->queried = $query;
+
         }
-        
         return $this;
     }  
     
@@ -159,29 +153,25 @@ class Query{
         if(count($this->queried) == 0){
             return null;
         }
-        $data = $this->loadTable();
+        $first_item = $this->queried[0];
         $primary_key = $this->class::getPrimaryKey();
-        foreach($data as $item){
-            if($item[$primary_key] == $this->queried[0]){
-                return new $this->class($item);
-            }
-        }
+        return (new Engine($this->class))->filter(function($item) use($primary_key, $first_item){
+            return $item->$primary_key == $first_item;
+        });
     }
 
     
 
     /**
      * Returns all data inside the json table
-     *
-     * @return Collection
      */
-    public function all():Collection
+    public function all()
     {
-        $data = $this->loadTable(false);
-        foreach($data as &$item){
-            $item = new $this->class($item);
+        $query = (new Engine($this->class))->filter(function($item){return true;});
+        if($query == null){
+            return [];
         }
-        return new Collection($data);
+        return $query;
     }
 
     /**
@@ -192,21 +182,17 @@ class Query{
     public function get():Collection
     {
         $queried = $this->queried;
-        $collection = [];
-        if(count($queried) > 0){
-            $data = $this->loadTable();
-            $primary_key = $this->class::getPrimaryKey();
-            foreach($data as $item){
-                $item_primary_key_value = $item[$primary_key];
-                if(array_search($item_primary_key_value, $queried) !== false){
-                    $collection[] = new $this->class($item);
-                    $queried = array_filter($queried, function($el) use($item_primary_key_value){
-                        return $el != $item_primary_key_value;
-                    });
+        $primary_key = $this->class::getPrimaryKey();
+        $collection = (new Engine($this->class))->filter(function($el) use($primary_key, &$queried){
+            foreach($queried as $item){
+                if($el->$primary_key == $item){
+                    unset($item);
+                    $queried = array_values($queried);
+                    return true;
                 }
             }
-            
-        }
+            return false;
+        });
         return new Collection($collection);
     }
 
@@ -217,52 +203,44 @@ class Query{
      */
     public function getLastPrimaryKeyValue():int
     {
-        $data = $this->loadTable();
-        $last_primary_key_value = 0;
-        foreach($data as $item){
-            $last_primary_key_value = max($last_primary_key_value, $item[$this->class::getPrimaryKey()]);
-        }
-        return $last_primary_key_value;
+        return (new Engine($this->class))->currentPrimaryKey();
     }
 
     /**
-     * Inserts data into the JsonModel table. DO NOT use except for testing or prototyping
+     * Fills the table with data
      *
-     * @param array|Collection $data
+     * @param \guifcoelho\JsonModels\Model|\Illuminate\Support\Collection $data
      * @return void
      */
-    public function insert($data)
-    {
-        if(!is_array($data) && !is_object($data) || (is_object($data) && !get_class($data) == Collection::class && !is_subclass_of($data, Collection::class))){
-            throw new JsonModelsException("Data to be inserted must 'array' or subclass of '".Collection::class."'");
+    public function fill($data):void{
+        if(is_object($data)){
+            if(!is_subclass_of($data, Model::class) && get_class($data) != Collection::class){
+                throw new JsonModelsException("The data must be a subclass of '".Model::class."' or an instance of '".Collection::class."'");
+            }
+        }else{
+            throw new JsonModelsException("The data must be a subclass of '".Model::class."' or an instance of '".Collection::class."'");
         }
-        $current = $this->loadTable();
-        $collection = [];
-        foreach($current as $item){
-            $collection[] = new $this->class($item);
-        }
-        $last_primary_key_value = $this->getLastPrimaryKeyValue();
         $primary_key = $this->class::getPrimaryKey();
-
-        if(is_array($data)){
-            foreach($data as &$item){
-                if(is_array($item)){
-                    $item = new $this->class($item);
+        if(is_subclass_of($data, Model::class)){
+            if($data->$primary_key == ""){
+                throw new JsonModelsException("Primary key value not defined");
+            }
+        }else{
+            foreach($data as $item){
+                if($item->$primary_key == ""){
+                    throw new JsonModelsException("Primary key value not defined");
                 }
             }
-            $data = new Collection($data);
         }
-        foreach(range(0,count($data)-1) as $i){
-            $data[$i]->$primary_key = ++$last_primary_key_value;
-            $data[$i] = new $this->class($data[$i]->toArray());
-            $collection[] = $data[$i];
-        }
-        
-        $collection = new Collection($collection);
-        file_put_contents($this->class::getTablePath(), json_encode($collection->toArray()));
-        
-        $models_inserted = new Collection($data);
 
-        return count($models_inserted) == 1 ? $models_inserted[0] : $models_inserted;
+        if(is_subclass_of($data, Model::class)){
+            $data = [$data->toJson()];
+        }else{
+            $data = array_map(function($el) use($primary_key){
+                return json_encode($el);
+            }, $data->toArray());
+        }
+        
+        (new Engine($this->class))->insert($data);
     }
 }

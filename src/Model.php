@@ -57,7 +57,7 @@ class Model implements Arrayable{
     public static function getTablePath(): string
     {
         $table = (new static)->table;
-        return (new Config)->get('path_to_tables')."/{$table}.json";
+        return (new Config)->get('path_to_tables')."/{$table}.ndjson";
     }
 
     public function getFields():array

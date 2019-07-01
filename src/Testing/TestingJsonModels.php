@@ -24,7 +24,7 @@ trait TestingJsonModels
     protected function refreshJsonModels():void{
         $path = (new Config)->get('path_to_tables');
         if (is_dir($path)) {
-            foreach (Finder::create()->files()->name('*.json')->in($path) as $file) {
+            foreach (Finder::create()->files()->name('*.ndjson')->in($path) as $file) {
                 unlink($file->getRealPath());
             }
         }

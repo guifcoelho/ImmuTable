@@ -21,7 +21,6 @@ class CreateModelTest extends TestCase
     public function test_create_and_load_json_model()
     {
         $data = jsonModelsFactory(Sample::class, 10, $this->factory_path)->create();
-        file_put_contents(Sample::getTablePath(), json_encode($data->toArray()));
         $model_data = Sample::all();
         $this->assertTrue(get_class($model_data) == Collection::class);
         $this->assertSimilarArrays($data->toArray(), $model_data->toArray());
@@ -30,7 +29,6 @@ class CreateModelTest extends TestCase
     public function test_query_json_model()
     {
         $data = jsonModelsFactory(Sample::class, 10, $this->factory_path)->create();
-        file_put_contents(Sample::getTablePath(), json_encode($data->toArray()));
         $model_data = Sample::where('id', '>', 5)->get();
         $this->assertTrue(get_class($model_data) == Collection::class);
         $filter_data = [];
@@ -101,9 +99,9 @@ class CreateModelTest extends TestCase
     public function test_inserting_with_object_different_than_array_or_collection(){
         $data = 12345;
         try{
-            (new Query(Sample::class))->insert($data);
+            (new Query(Sample::class))->fill($data);
         }catch(JsonModelsException $e){
-            $this->assertTrue($e->getMessage() == "Data to be inserted must 'array' or subclass of '".Collection::class."'");
+            $this->assertTrue($e->getMessage() == "The data must be a subclass of '".Model::class."' or an instance of '".Collection::class."'");
         }
     }
 
@@ -125,9 +123,9 @@ class CreateModelTest extends TestCase
     public function test_querying_orWhere(){
         $dummy1 = jsonModelsFactory(Sample::class, $this->factory_path)->create();
         $dummy2 = jsonModelsFactory(Sample::class, $this->factory_path)->create();
-        $collection = Sample::where('id', $dummy1->id)
-                        ->orWhere('id', $dummy2->id)
-                        ->get();
+        $collection = Sample::where('id', $dummy1->id);
+        $collection = $collection->orWhere('id', $dummy2->id);
+        $collection = $collection->get();
         foreach($collection as $item){
             $this->assertTrue($item->id == $dummy1->id || $item->id == $dummy2->id);
         }
@@ -147,18 +145,12 @@ class CreateModelTest extends TestCase
     }
 
     public function test_inserting_array_of_data(){
-        $dummy = jsonModelsFactory(Sample::class, 10, $this->factory_path)->make();
-        $arr_dummy = $dummy->toArray();
-        $models_inserted = (new Query(Sample::class))->insert($arr_dummy);
-        $arr_inserted = $models_inserted->toArray();
-        $this->assertJsonTableHas(Sample::class, $arr_inserted);
-        
-        foreach(range(0, count($dummy)-1) as $i){
-            foreach(array_keys($arr_dummy[0]) as $key){
-                if($key != 'id'){
-                    $this->assertTrue($arr_dummy[$i][$key] === $arr_inserted[$i][$key]);
-                }
-            }
+        try{
+            $dummy = jsonModelsFactory(Sample::class, 10, $this->factory_path)->make();
+            (new Query(Sample::class))->fill($dummy);
+        }
+        catch(JsonModelsException $e){
+            $this->assertTrue($e->getMessage() == "Primary key value not defined");
         }
     }
 }
