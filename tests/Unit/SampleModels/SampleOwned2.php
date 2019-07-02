@@ -13,7 +13,7 @@ class SampleOwned2 extends Model
     protected $table = "test_table_owned2";
 
     public function owner(){
-        return $this->belongsToOne(Sample::class, 'owner');
+        return $this->belongsTo(Sample::class, 'owner');
     }
 
 }

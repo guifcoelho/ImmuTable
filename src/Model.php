@@ -127,13 +127,13 @@ class Model implements Arrayable{
     }
 
     /**
-     * ```belongsToOne``` relationship
+     * ```belongsTo``` relationship
      *
      * @param string $owner_class
      * @param string $field
      * @param string $field_in_owner_class
      */
-    protected function belongsToOne(string $owner_class, string $field = '', string $field_in_owner_class = ''){
+    protected function belongsTo(string $owner_class, string $field = '', string $field_in_owner_class = ''){
         $owner_primary_key = $owner_class::getPrimaryKey();
         if($field == ''){
             $owner_std_name = $owner_class::getName();

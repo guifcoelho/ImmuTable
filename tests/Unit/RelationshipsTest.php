@@ -10,7 +10,7 @@ use guifcoelho\ImmuTable\Tests\Unit\SampleModels\SampleOwned2;
 
 class RelationshipsTest extends TestCase
 {
-    public function test_belongsToOne_relationship(){
+    public function test_belongsTo_relationship(){
         $owner = ImmuTableFactory(Sample::class,$this->factory_path)->create();
         $owned = ImmuTableFactory(SampleOwned::class, $this->factory_path)->create([
             'sample_id' => $owner->id
@@ -18,7 +18,7 @@ class RelationshipsTest extends TestCase
         $this->assertTrue($owned->owner()->id == $owner->id);
     }
 
-    public function test_belongsToOne_relationship_with_field_with_custom_name(){
+    public function test_belongsTo_relationship_with_field_with_custom_name(){
         $owner = ImmuTableFactory(Sample::class,$this->factory_path)->create();
         $owned = ImmuTableFactory(SampleOwned2::class, $this->factory_path)->create([
             'owner' => $owner->id
