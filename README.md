@@ -16,9 +16,9 @@ DO NOT use this package if your models' data are likely to change.
 
 ## Configuration
 
-The config class will look into a `config_path()` function and search for the `ImmuTable.php` configuration file. Copy this file from `src/Config` to your own configuration folder.
+The config class will look into a `config_path()` function and search for the `immutable.php` configuration file. Copy this file from `src/Config` to your own configuration folder.
 
-By default, the tables are stored in `storage/app/jsontables`.
+By default, the tables are stored in `storage/app/immutable/tables`.
 
 Also you can increase or decrese the `chunk_size` inside the configuration file. When loading the data, the Engine will do it in chunks as set in the configuration.
 
