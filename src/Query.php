@@ -10,10 +10,18 @@ use guifcoelho\ImmuTable\Exceptions\ImmuTableException;
 
 class Query{
 
+    /**
+     * Model class name. Must be a subclass of `\guifcoelho\ImmuTable\Model`
+     *
+     * @var string
+     */
     protected $class = '';
 
-    protected $queried = [];
-
+    /**
+     * List of queries to be executed
+     *
+     * @var array
+     */
     protected $query = [];
 
     /**
@@ -76,16 +84,6 @@ class Query{
             'sign' => $sign,
             'value' => $value
         ];
-    }
-
-    /**
-     * Return list of primary keys queried
-     *
-     * @return array
-     */
-    public function getQueried():array
-    {
-        return $this->queried;
     }
 
     /**
