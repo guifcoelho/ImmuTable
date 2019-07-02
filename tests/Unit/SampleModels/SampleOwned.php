@@ -1,9 +1,9 @@
 <?php
 
-namespace guifcoelho\JsonModels\Tests\Unit\SampleModels;
+namespace guifcoelho\ImmuTable\Tests\Unit\SampleModels;
 
-use guifcoelho\JsonModels\Model;
-use guifcoelho\JsonModels\Tests\Unit\SampleModels\Sample;
+use guifcoelho\ImmuTable\Model;
+use guifcoelho\ImmuTable\Tests\Unit\SampleModels\Sample;
 
 class SampleOwned extends Model
 {

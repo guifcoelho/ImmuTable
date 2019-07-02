@@ -1,18 +1,20 @@
 <?php
 
-namespace guifcoelho\JsonModels;
+namespace guifcoelho\ImmuTable;
 
 use JsonMachine\JsonMachine;
-use guifcoelho\JsonModels\Model;
-use guifcoelho\JsonModels\Engine;
+use guifcoelho\ImmuTable\Model;
+use guifcoelho\ImmuTable\Engine;
 use Illuminate\Support\Collection;
-use guifcoelho\JsonModels\Exceptions\JsonModelsException;
+use guifcoelho\ImmuTable\Exceptions\ImmuTableException;
 
 class Query{
 
     protected $class = '';
 
     protected $queried = [];
+
+    protected $query = [];
 
     /**
      * Instanciates a Query object
@@ -21,7 +23,7 @@ class Query{
      */
     public function __construct(string $class){
         if(!is_subclass_of($class, Model::class)){
-            throw new JsonModelsException("'{$class}' must be a subclass of '".Model::class."'");
+            throw new ImmuTableException("'{$class}' must be a subclass of '".Model::class."'");
         }
         $this->class = $class;
     }
@@ -44,7 +46,7 @@ class Query{
             case '<=': return $el <= $value;
             case '>=': return $el >= $value;
             case '===': return $el === $value;
-            default: throw new JsonModelsException("The second argument must be a valid comparison sign");
+            default: throw new ImmuTableException("The second argument must be a valid comparison sign");
         }
     }
 
@@ -54,7 +56,7 @@ class Query{
      * @param array $args
      * @return array
      */
-    public static function getQueryArguments(array $args):array
+    protected function getQueryArguments(array $args):array
     {
         $sign = "==";
         if(count($args) == 1){
@@ -62,11 +64,11 @@ class Query{
         }
         if(count($args) == 2){
             if(!is_string($args[0]) || strlen($args[0]) > 3){
-                throw new JsonModelsException("The second argument must be a valid comparison sign");
+                throw new ImmuTableException("The second argument must be a valid comparison sign");
             }
             $sign = $args[0];
             if(!is_numeric($args[1]) && !is_string($args[1])){
-                throw new JsonModelsException("The third argument must be either a number or a string");
+                throw new ImmuTableException("The third argument must be either a number or a string");
             }
             $value = $args[1];
         }
@@ -95,33 +97,8 @@ class Query{
      */
     public function where(string $field, ...$params):self
     {
-        $engine = new Engine($this->class);
-        $args = static::getQueryArguments($params);
-        $primary_key_name = $this->class::getPrimaryKey();
-        if(count($this->queried) == 0){
-            $self = $this;
-            $data = $engine->filter(
-                function($item) use($self, $field, $args){
-                    return $self->evalModelItem($item->$field, $args['sign'], $args['value']);
-                }
-            );
-            $data = $data->toArray();
-            $query = array_values(array_map(function($item) use($primary_key_name){
-                return $item[$primary_key_name];
-            }, $data));
-
-            $this->queried = $query;
-        }else{
-            $collection = $this->get();
-            $query = [];
-            foreach($collection as $item){
-                if($this->evalModelItem($item->$field, $args['sign'], $args['value'])){
-                    $query[] = $item->$primary_key_name;
-                }
-            }
-            $this->queried = $query;
-
-        }
+        $args = $this->getQueryArguments($params);
+        $this->query[] = array_merge(['operation' => 'where', 'field' => $field], $args);
         return $this;
     }  
     
@@ -134,25 +111,56 @@ class Query{
      */
     public function orWhere(string $field, ...$params):self
     {
-        $args = static::getQueryArguments($params);
-        $query = $this->class::where($field, $args['sign'], $args['value'])->getQueried();
-        $this->queried = array_unique(array_merge($this->queried, $query));
+        $this->query[] = array_merge(['operation' => 'orWhere', 'field' => $field], $this->getQueryArguments($params));
         return $this;
+    }
+
+
+    protected function run():Collection
+    {
+        if(count($this->query) == 0){
+            return new Collection([]);
+        }
+        
+        $where = array_filter($this->query, function($el){
+            return $el['operation'] == 'where';
+        });
+        $orWhere = array_filter($this->query, function($el){
+            return $el['operation'] == 'orWhere';
+        });
+        $self = $this;
+        return (new Engine($this->class))->filter(function($item) use($self, $where, $orWhere){
+            foreach($orWhere as $query){
+                $field = $query['field'];
+                if(!property_exists($item, $field)){
+                    return false;
+                }
+                if($self->evalModelItem($item->$field, $query['sign'], $query['value'])){
+                    return true;
+                }
+            }
+            foreach($where as $query){
+                $field = $query['field'];
+                if(!property_exists($item, $field)){
+                    return false;
+                }
+                if(!$self->evalModelItem($item->$field, $query['sign'], $query['value'])){
+                    return false;
+                }
+            }
+            return true;
+        });
     }
 
     /**
      * Returns the first item of the collection. It will return null if nothing is found
      */
     public function first(){
-        if(count($this->queried) == 0){
+        $query = $this->run();
+        if(count($query) == 0){
             return null;
         }
-        $first_item = $this->queried[0];
-        $primary_key = $this->class::getPrimaryKey();
-        $query = (new Engine($this->class))->filter(function($item) use($primary_key, $first_item){
-            return $item->$primary_key == $first_item;
-        });
-        return count($query) == 0 ? null : $query->first();
+        return $query->first();
     }
 
     
@@ -171,20 +179,8 @@ class Query{
      * @return Collection
      */
     public function get():Collection
-    {
-        $queried = $this->queried;
-        $primary_key = $this->class::getPrimaryKey();
-        $collection = (new Engine($this->class))->filter(function($el) use($primary_key, &$queried){
-            foreach($queried as $item){
-                if($el->$primary_key == $item){
-                    unset($item);
-                    $queried = array_values($queried);
-                    return true;
-                }
-            }
-            return false;
-        });
-        return new Collection($collection);
+    {   
+        return $this->run();
     }
 
     /**
@@ -200,26 +196,26 @@ class Query{
     /**
      * Fills the table with data
      *
-     * @param \guifcoelho\JsonModels\Model|\Illuminate\Support\Collection $data
+     * @param \guifcoelho\ImmuTable\Model|\Illuminate\Support\Collection $data
      * @return void
      */
     public function fill($data):void{
         if(is_object($data)){
             if(!is_subclass_of($data, Model::class) && get_class($data) != Collection::class){
-                throw new JsonModelsException("The data must be a subclass of '".Model::class."' or an instance of '".Collection::class."'");
+                throw new ImmuTableException("The data must be a subclass of '".Model::class."' or an instance of '".Collection::class."'");
             }
         }else{
-            throw new JsonModelsException("The data must be a subclass of '".Model::class."' or an instance of '".Collection::class."'");
+            throw new ImmuTableException("The data must be a subclass of '".Model::class."' or an instance of '".Collection::class."'");
         }
         $primary_key = $this->class::getPrimaryKey();
         if(is_subclass_of($data, Model::class)){
             if($data->$primary_key == ""){
-                throw new JsonModelsException("Primary key value not defined");
+                throw new ImmuTableException("Primary key value not defined");
             }
         }else{
             foreach($data as $item){
                 if($item->$primary_key == ""){
-                    throw new JsonModelsException("Primary key value not defined");
+                    throw new ImmuTableException("Primary key value not defined");
                 }
             }
         }

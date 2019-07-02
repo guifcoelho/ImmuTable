@@ -1,12 +1,12 @@
 <?php
 
-namespace guifcoelho\JsonModels;
+namespace guifcoelho\ImmuTable;
 
 use Symfony\Component\Finder\Finder;
-use guifcoelho\JsonModels\Model;
-use guifcoelho\JsonModels\Client;
+use guifcoelho\ImmuTable\Model;
+use guifcoelho\ImmuTable\Client;
 use Illuminate\Support\Collection;
-use guifcoelho\JsonModels\Exceptions\JsonModelsException;
+use guifcoelho\ImmuTable\Exceptions\ImmuTableException;
 
 class Factory{
 
@@ -77,7 +77,7 @@ class Factory{
     /**
      * Sets the definition for new JsonModel factory.
      * 
-     * It will not register if `$class` is not subclass of `\guifcoelho\JsonModels\Model`
+     * It will not register if `$class` is not subclass of `\guifcoelho\ImmuTable\Model`
      *
      * @param string $class
      * @param callable $attributes
@@ -97,7 +97,7 @@ class Factory{
      */
     protected function buildData(array $attributes = []){
         if(!array_key_exists($this->class, $this->definitions)){
-            throw new JsonModelsException("No definitions set for class '{$this->class}'");
+            throw new ImmuTableException("No definitions set for class '{$this->class}'");
         }
         $collection = [];
         foreach(range(1, $this->size) as $item){

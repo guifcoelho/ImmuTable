@@ -1,20 +1,20 @@
 <?php
 
-namespace guifcoelho\JsonModels\Tests\Unit;
+namespace guifcoelho\ImmuTable\Tests\Unit;
 
-use guifcoelho\JsonModels\Tests\TestCase;
+use guifcoelho\ImmuTable\Tests\TestCase;
 
-use guifcoelho\JsonModels\Model;
+use guifcoelho\ImmuTable\Model;
 use Illuminate\Support\Collection;
 
-use guifcoelho\JsonModels\Tests\Unit\SampleModels\Sample as SampleModel;
+use guifcoelho\ImmuTable\Tests\Unit\SampleModels\Sample as SampleModel;
 
-class JsonModelsTest extends TestCase
+class ImmuTableTest extends TestCase
 {
-    use \guifcoelho\JsonModels\Testing\Support\ArrayAssertions;
+    use \guifcoelho\ImmuTable\Testing\Support\ArrayAssertions;
     
     public function test_transforming_json_models_to_array(){
-        $model = jsonModelsFactory(SampleModel::class, $this->factory_path)->create();
+        $model = ImmuTableFactory(SampleModel::class, $this->factory_path)->create();
         $this->assertTrue(is_array($model->toArray()));
         $data = [];
         foreach($model->getFields() as $field){

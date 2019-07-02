@@ -1,36 +1,36 @@
 <?php
 
-namespace guifcoelho\JsonModels\Tests\Unit;
+namespace guifcoelho\ImmuTable\Tests\Unit;
 
-use guifcoelho\JsonModels\Tests\TestCase;
+use guifcoelho\ImmuTable\Tests\TestCase;
 
-use guifcoelho\JsonModels\Tests\Unit\SampleModels\Sample;
-use guifcoelho\JsonModels\Tests\Unit\SampleModels\SampleOwned;
-use guifcoelho\JsonModels\Tests\Unit\SampleModels\SampleOwned2;
+use guifcoelho\ImmuTable\Tests\Unit\SampleModels\Sample;
+use guifcoelho\ImmuTable\Tests\Unit\SampleModels\SampleOwned;
+use guifcoelho\ImmuTable\Tests\Unit\SampleModels\SampleOwned2;
 
 class RelationshipsTest extends TestCase
 {
     public function test_belongsToOne_relationship(){
-        $owner = jsonModelsFactory(Sample::class,$this->factory_path)->create();
-        $owned = jsonModelsFactory(SampleOwned::class, $this->factory_path)->create([
+        $owner = ImmuTableFactory(Sample::class,$this->factory_path)->create();
+        $owned = ImmuTableFactory(SampleOwned::class, $this->factory_path)->create([
             'sample_id' => $owner->id
         ]);
         $this->assertTrue($owned->owner()->id == $owner->id);
     }
 
     public function test_belongsToOne_relationship_with_field_with_custom_name(){
-        $owner = jsonModelsFactory(Sample::class,$this->factory_path)->create();
-        $owned = jsonModelsFactory(SampleOwned2::class, $this->factory_path)->create([
+        $owner = ImmuTableFactory(Sample::class,$this->factory_path)->create();
+        $owned = ImmuTableFactory(SampleOwned2::class, $this->factory_path)->create([
             'owner' => $owner->id
         ]);
         $this->assertTrue($owned->owner()->id == $owner->id);
     }
 
     public function test_hasMany_relationship(){
-        $dummy = jsonModelsFactory(Sample::class, 5, $this->factory_path)->create()->shuffle();
+        $dummy = ImmuTableFactory(Sample::class, 5, $this->factory_path)->create()->shuffle();
         $owner = $dummy[0];
         $size = rand(1,10);
-        $owned = jsonModelsFactory(SampleOwned::class, $size, $this->factory_path)->create([
+        $owned = ImmuTableFactory(SampleOwned::class, $size, $this->factory_path)->create([
             'sample_id' => $owner->id
         ]);
         $this->assertTrue(count(Sample::all()) > 0);
@@ -42,10 +42,10 @@ class RelationshipsTest extends TestCase
     }
 
     public function test_hasMany_relationship_with_field_with_custom_name(){
-        $dummy = jsonModelsFactory(Sample::class, 5, $this->factory_path)->create();
+        $dummy = ImmuTableFactory(Sample::class, 5, $this->factory_path)->create();
         $owner = $dummy[0];
         $size = rand(1,10);
-        $owned = jsonModelsFactory(SampleOwned2::class, $size, $this->factory_path)->create([
+        $owned = ImmuTableFactory(SampleOwned2::class, $size, $this->factory_path)->create([
             'owner' => $owner->id
         ]);
         $this->assertTrue(count(Sample::all()) > 0);

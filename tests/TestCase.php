@@ -1,9 +1,9 @@
 <?php
 
-namespace guifcoelho\JsonModels\Tests;
+namespace guifcoelho\ImmuTable\Tests;
 
 use PHPUnit\Framework\TestCase as PHPUnit;
-use guifcoelho\JsonModels\Testing\TestingJsonModels;
+use guifcoelho\ImmuTable\Testing\TestingImmuTable;
 
 
 /**
@@ -13,7 +13,7 @@ use guifcoelho\JsonModels\Testing\TestingJsonModels;
  */
 class TestCase extends PHPUnit
 {
-    use TestingJsonModels;
+    use TestingImmuTable;
 
     protected $factory_path = __DIR__."/Unit/SampleModels/Factory";
 
@@ -25,7 +25,7 @@ class TestCase extends PHPUnit
     public function setUp():void{
         parent::setUp();
         $this->bootstrap();
-        $this->refreshJsonModels();
+        $this->refreshImmuTable();
     }
 
     public function tearDown():void

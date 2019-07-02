@@ -26,12 +26,12 @@
   },
   "autoload": {
     "psr-4": {
-      "guifcoelho\\JsonModels\\": "src"
+      "guifcoelho\\ImmuTable\\": "src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "guifcoelho\\JsonModels\\Tests\\": "tests"
+      "guifcoelho\\ImmuTable\\Tests\\": "tests"
     }
   },
   "scripts": {

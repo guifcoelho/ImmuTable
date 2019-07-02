@@ -1,13 +1,13 @@
 <?php
 
-namespace guifcoelho\JsonModels\ServiceProviders;
+namespace guifcoelho\ImmuTable\ServiceProviders;
 
 use Illuminate\Support\ServiceProvider;
 
 /**
  * Class ServiceProvider
  */
-class JsonModelsServiceProvider extends ServiceProvider
+class ImmuTableServiceProvider extends ServiceProvider
 {
 
     /**
@@ -37,7 +37,7 @@ class JsonModelsServiceProvider extends ServiceProvider
     {
         // When users execute Laravel's vendor:publish command, the config file will be copied to the specified location
         $this->publishes([
-            __DIR__ . '/Config/jsonmodels.php' => config_path('jsonmodels.php'),
+            __DIR__ . '/Config/immutable.php' => config_path('immutable.php'),
         ]);
     }
 

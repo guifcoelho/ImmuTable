@@ -1,16 +1,16 @@
 <?php
 
-namespace guifcoelho\JsonModels;
+namespace guifcoelho\ImmuTable;
 
-use guifcoelho\JsonModels\Model;
+use guifcoelho\ImmuTable\Model;
 use Illuminate\Support\Collection;
-use guifcoelho\JsonModels\Config;
-use guifcoelho\JsonModels\Exceptions\JsonModelsException;
+use guifcoelho\ImmuTable\Config;
+use guifcoelho\ImmuTable\Exceptions\ImmuTableException;
 
 class Engine{
 
     /**
-     * Model class name. Must be a subclass of `\guifcoelho\JsonModels\Model`
+     * Model class name. Must be a subclass of `\guifcoelho\ImmuTable\Model`
      *
      * @var string
      */
@@ -51,7 +51,7 @@ class Engine{
      */
     public function __construct(string $class){
         if(!is_subclass_of($class, Model::class)){
-            throw new JsonModelsException("'{$class}' is not a subclass of '".Model::class."'");
+            throw new ImmuTableException("'{$class}' is not a subclass of '".Model::class."'");
         }
         $this->class = $class;
         $this->chunk_size = (new Config)->get('chunk_size');
@@ -101,7 +101,7 @@ class Engine{
         }
         catch(Exception $e)
         {
-            throw new JsonModelsException("Engine::" . $e->getMessage());
+            throw new ImmuTableException("Engine::" . $e->getMessage());
             return false;
         }
     }
@@ -110,7 +110,7 @@ class Engine{
      * Loads and filters data
      *
      * @param callable $callback
-     * @return null|\guifcoelho\JsonModels\Model|\Illuminate\Support\Collection
+     * @return null|\guifcoelho\ImmuTable\Model|\Illuminate\Support\Collection
      */
     public function filter(callable $callback){
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace guifcoelho\JsonModels;
+namespace guifcoelho\ImmuTable;
 
-use guifcoelho\JsonModels\Config;
-use guifcoelho\JsonModels\Query;
-use guifcoelho\JsonModels\Exceptions\JsonModelsException;
+use guifcoelho\ImmuTable\Config;
+use guifcoelho\ImmuTable\Query;
+use guifcoelho\ImmuTable\Exceptions\ImmuTableException;
 use Illuminate\Contracts\Support\Arrayable;
 
 class Model implements Arrayable{
@@ -98,7 +98,7 @@ class Model implements Arrayable{
         }else{
             foreach($this->fields as $field){
                 if(!array_key_exists($field, $data)){
-                    throw new JsonModelsException("Field '{$field}' was not found in the data provided");
+                    throw new ImmuTableException("Field '{$field}' was not found in the data provided");
                 }
                 $this->$field = $data[$field];
             }

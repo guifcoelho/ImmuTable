@@ -1,9 +1,9 @@
 <?php
-namespace guifcoelho\JsonModels\Exceptions;
+namespace guifcoelho\ImmuTable\Exceptions;
 
-use guifcoelho\JsonModels\Exceptions\JsonModelsException;
+use guifcoelho\ImmuTable\Exceptions\ImmuTableException;
 
 /**
  * Class ConfigFileNotFoundException
  */
-class ConfigFileNotFoundException extends JsonModelsException{}
+class ConfigFileNotFoundException extends ImmuTableException{}

@@ -1,26 +1,26 @@
 <?php
 
-namespace guifcoelho\JsonModels\Tests\Unit;
+namespace guifcoelho\ImmuTable\Tests\Unit;
 
-use guifcoelho\JsonModels\Tests\TestCase;
-use guifcoelho\JsonModels\Exceptions\JsonModelsException;
+use guifcoelho\ImmuTable\Tests\TestCase;
+use guifcoelho\ImmuTable\Exceptions\ImmuTableException;
 
-use guifcoelho\JsonModels\Query;
-use guifcoelho\JsonModels\Model;
+use guifcoelho\ImmuTable\Query;
+use guifcoelho\ImmuTable\Model;
 use Illuminate\Support\Collection;
 
-use guifcoelho\JsonModels\Tests\Unit\SampleModels\Sample;
-use guifcoelho\JsonModels\Tests\Unit\SampleModels\Sample3;
-use guifcoelho\JsonModels\Tests\Unit\SampleModels\Sample4;
-use guifcoelho\JsonModels\Tests\Unit\SampleModels\SampleOwned;
+use guifcoelho\ImmuTable\Tests\Unit\SampleModels\Sample;
+use guifcoelho\ImmuTable\Tests\Unit\SampleModels\Sample3;
+use guifcoelho\ImmuTable\Tests\Unit\SampleModels\Sample4;
+use guifcoelho\ImmuTable\Tests\Unit\SampleModels\SampleOwned;
 
 class CreateModelTest extends TestCase
 {
-    use \guifcoelho\JsonModels\Testing\Support\JsonTablesAssertions;
+    use \guifcoelho\ImmuTable\Testing\Support\ImmuTableAssertions;
 
     public function test_create_and_load_json_model()
     {
-        $data = jsonModelsFactory(Sample::class, 10, $this->factory_path)->create();
+        $data = ImmuTableFactory(Sample::class, 10, $this->factory_path)->create();
         $model_data = Sample::all();
         $this->assertTrue(get_class($model_data) == Collection::class);
         $this->assertSimilarArrays($data->toArray(), $model_data->toArray());
@@ -28,7 +28,7 @@ class CreateModelTest extends TestCase
 
     public function test_query_json_model()
     {
-        $data = jsonModelsFactory(Sample::class, 10, $this->factory_path)->create();
+        $data = ImmuTableFactory(Sample::class, 10, $this->factory_path)->create();
         $model_data = Sample::where('id', '>', 5)->get();
         $this->assertTrue(get_class($model_data) == Collection::class);
         $filter_data = [];
@@ -40,40 +40,32 @@ class CreateModelTest extends TestCase
         $this->assertSimilarArrays($filter_data, $model_data->toArray());
     }
 
-    public function test_get_queried(){
-        $dummy = jsonModelsFactory(Sample::class, 10, $this->factory_path)->create();
-        $query = Sample::where('id', '>', 5);
-        $queried = $query->getQueried();
-        $collection = $query->get();
-        $collection_id = array_values(array_column($collection->toArray(), 'id'));
-        foreach($queried as $id){
-            $this->assertTrue(array_search($id, $collection_id) !== false);
-        }
-    }
-
     public function test_querying_with_invalid_sign(){
-        jsonModelsFactory(Sample::class, 10, $this->factory_path)->create();
+        ImmuTableFactory(Sample::class, 10, $this->factory_path)->create();
         try{
-            $model = Sample::where('id', 'das', 3);
-        }catch(JsonModelsException $e){
+            $model = Sample::where('id', 'das', 3)->get();
+            $this->assertTrue(false);
+        }catch(ImmuTableException $e){
             $this->assertTrue($e->getMessage() == "The second argument must be a valid comparison sign");
         }
     }
 
     public function test_querying_with_invalid_sign2(){
-        jsonModelsFactory(Sample::class, 10, $this->factory_path)->create();
+        ImmuTableFactory(Sample::class, 10, $this->factory_path)->create();
         try{
             $model = Sample::where('id', 'dasdas', 3);
-        }catch(JsonModelsException $e){
+            $this->assertTrue(false);
+        }catch(ImmuTableException $e){
             $this->assertTrue($e->getMessage() == "The second argument must be a valid comparison sign");
         }
     }
 
     public function test_querying_with_invalid_value(){
-        jsonModelsFactory(Sample::class, 10, $this->factory_path)->create();
+        ImmuTableFactory(Sample::class, 10, $this->factory_path)->create();
         try{
             $model = Sample::where('id', '==', [1,2,3]);
-        }catch(JsonModelsException $e){
+            $this->assertTrue(false);
+        }catch(ImmuTableException $e){
             $this->assertTrue($e->getMessage() == "The third argument must be either a number or a string");
         }
     }
@@ -91,7 +83,8 @@ class CreateModelTest extends TestCase
     public function test_query_with_non_json_model_class(){
         try{
             $query = new Query(get_class($this));
-        }catch(JsonModelsException $e){
+            $this->assertTrue(false);
+        }catch(ImmuTableException $e){
             $this->assertTrue($e->getMessage() == "'".get_class($this)."' must be a subclass of '".Model::class."'");
         }
     }
@@ -100,19 +93,20 @@ class CreateModelTest extends TestCase
         $data = 12345;
         try{
             (new Query(Sample::class))->fill($data);
-        }catch(JsonModelsException $e){
+            $this->assertTrue(false);
+        }catch(ImmuTableException $e){
             $this->assertTrue($e->getMessage() == "The data must be a subclass of '".Model::class."' or an instance of '".Collection::class."'");
         }
     }
 
     public function test_querying_first_null(){
-        $dummy = jsonModelsFactory(Sample::class, 10, $this->factory_path)->create();
+        $dummy = ImmuTableFactory(Sample::class, 10, $this->factory_path)->create();
         $query = Sample::where('id', '<', 0)->first();
         $this->assertTrue($query == null);
     }
 
     public function test_querying_with_where_chaining(){
-        $dummy = jsonModelsFactory(Sample::class, 10, $this->factory_path)->create();
+        $dummy = ImmuTableFactory(Sample::class, 10, $this->factory_path)->create();
         $ids = array_column($dummy->toArray(), 'id');
         $collection = Sample::where('id', '>=', $ids[0])
                             ->where('id', '<', max($ids)/2)
@@ -121,8 +115,8 @@ class CreateModelTest extends TestCase
     }
 
     public function test_querying_orWhere(){
-        $dummy1 = jsonModelsFactory(Sample::class, $this->factory_path)->create();
-        $dummy2 = jsonModelsFactory(Sample::class, $this->factory_path)->create();
+        $dummy1 = ImmuTableFactory(Sample::class, $this->factory_path)->create();
+        $dummy2 = ImmuTableFactory(Sample::class, $this->factory_path)->create();
         $collection = Sample::where('id', $dummy1->id);
         $collection = $collection->orWhere('id', $dummy2->id);
         $collection = $collection->get();
@@ -133,23 +127,25 @@ class CreateModelTest extends TestCase
 
     public function test_exception_while_querying_with_fields_constraint(){
         try{
-            $dummy = jsonModelsFactory(Sample3::class, 10, $this->factory_path)->create();
-        }catch(JsonModelsException $e){
+            $dummy = ImmuTableFactory(Sample3::class, 10, $this->factory_path)->create();
+            $this->assertTrue(false);
+        }catch(ImmuTableException $e){
             $this->assertTrue($e->getMessage() == "Field 'email' was not found in the data provided");
         }
     }
 
     public function test_querying_with_fields_constraint(){
-        $data = jsonModelsFactory(Sample4::class, 10, $this->factory_path)->create();
-        $this->assertJsonTableHas(Sample4::class, $data->toArray());
+        $data = ImmuTableFactory(Sample4::class, 10, $this->factory_path)->create();
+        $this->assertImmuTableHas(Sample4::class, $data->toArray());
     }
 
     public function test_inserting_array_of_data(){
         try{
-            $dummy = jsonModelsFactory(Sample::class, 10, $this->factory_path)->make();
+            $dummy = ImmuTableFactory(Sample::class, 10, $this->factory_path)->make();
             (new Query(Sample::class))->fill($dummy);
+            $this->assertTrue(false);
         }
-        catch(JsonModelsException $e){
+        catch(ImmuTableException $e){
             $this->assertTrue($e->getMessage() == "Primary key value not defined");
         }
     }

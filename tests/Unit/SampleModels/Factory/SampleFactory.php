@@ -1,7 +1,7 @@
 <?php
 
 use Faker\Generator as Faker;
-use guifcoelho\JsonModels\Tests\Unit\SampleModels\Sample;
+use guifcoelho\ImmuTable\Tests\Unit\SampleModels\Sample;
 
 $factory->define(Sample::class, function(Faker $faker){
     return [

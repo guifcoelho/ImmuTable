@@ -1,6 +1,6 @@
 <?php
 
-namespace guifcoelho\JsonModels\Testing\Support;
+namespace guifcoelho\ImmuTable\Testing\Support;
 
 use PHPUnit\Framework\Assert as PHPUnit;
 

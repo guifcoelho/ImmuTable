@@ -16,7 +16,7 @@ DO NOT use this package if your models' data are likely to change.
 
 ## Configuration
 
-The config class will look into a `config_path()` function and search for the `jsonmodels.php` configuration file. Copy this file from `src/Config` to your own configuration folder.
+The config class will look into a `config_path()` function and search for the `ImmuTable.php` configuration file. Copy this file from `src/Config` to your own configuration folder.
 
 By default, the tables are stored in `storage/app/jsontables`.
 
@@ -27,7 +27,7 @@ Also you can increase or decrese the `chunk_size` inside the configuration file.
 You should be able to create classes of models the same way as Laravel Eloquent:
 
 ```php
-use guifcoelho\JsonModels\Model;
+use guifcoelho\ImmuTable\Model;
 
 class Sample extends Model
 {
@@ -38,7 +38,7 @@ class Sample extends Model
 It will load your data from the table `table_example.ndjson` and set all fields accordingly. If you want to restrict the fields to be loaded, just include the protected array `$fields`:
 
 ```php
-use guifcoelho\JsonModels\Model;
+use guifcoelho\ImmuTable\Model;
 
 class Sample extends Model
 {
@@ -49,7 +49,7 @@ class Sample extends Model
 If you do not want some fields to be returns in the `toArray()` or `toJson()` functions, just include their name as a protected array:
 
 ```php
-use guifcoelho\JsonModels\Model;
+use guifcoelho\ImmuTable\Model;
 
 class Sample extends Model
 {
@@ -60,7 +60,7 @@ class Sample extends Model
 If you want your primary key to be anything but 'id', just declare as below (remember that your primary key must be unique and integer):
 
 ```php
-use guifcoelho\JsonModels\Model;
+use guifcoelho\ImmuTable\Model;
 
 class Sample extends Model
 {
@@ -104,7 +104,7 @@ After that, you can processes your that using functions from `\Illuminate\Suppor
 You can declare relationships between models the same way as Laravel Eloquent. Please, look into the `Model` class to see which relationships are implemented.
 
 ```php
-use guifcoelho\JsonModels\Model;
+use guifcoelho\ImmuTable\Model;
 
 use Sample2;
 use Sample3;

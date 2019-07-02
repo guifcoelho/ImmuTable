@@ -1,9 +1,9 @@
 <?php
 
-namespace guifcoelho\JsonModels;
+namespace guifcoelho\ImmuTable;
 
 use Illuminate\Config\Repository;
-use guifcoelho\JsonModels\Exceptions\ConfigFileNotFoundException;
+use guifcoelho\ImmuTable\Exceptions\ConfigFileNotFoundException;
 
 /**
  * Class Config
@@ -14,7 +14,7 @@ class Config
     /**
      * Config file name
      */
-    CONST CONFIG_FILE_NAME = "jsonmodels";
+    CONST CONFIG_FILE_NAME = "immutable";
 
     /**
      * @var  \Illuminate\Config\Repository

@@ -1,12 +1,12 @@
 <?php
 
-namespace guifcoelho\JsonModels\Tests\Unit;
+namespace guifcoelho\ImmuTable\Tests\Unit;
 
-use guifcoelho\JsonModels\Tests\TestCase;
+use guifcoelho\ImmuTable\Tests\TestCase;
 
-use guifcoelho\JsonModels\Config;
+use guifcoelho\ImmuTable\Config;
 
-class TestingJsonModelsClassTest extends TestCase
+class TestingImmuTableClassTest extends TestCase
 {
 
     protected function deleteDir($path) {

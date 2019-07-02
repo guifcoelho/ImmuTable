@@ -1,12 +1,12 @@
 <?php
 
-namespace guifcoelho\JsonModels\Testing;
+namespace guifcoelho\ImmuTable\Testing;
 
-use guifcoelho\JsonModels\Model;
-use guifcoelho\JsonModels\Config;
+use guifcoelho\ImmuTable\Model;
+use guifcoelho\ImmuTable\Config;
 use Symfony\Component\Finder\Finder;
 
-trait TestingJsonModels
+trait TestingImmuTable
 {
     protected function bootstrap():void{
         require __DIR__."/Support/Functions.php";
@@ -21,7 +21,7 @@ trait TestingJsonModels
         }
     }
 
-    protected function refreshJsonModels():void{
+    protected function refreshImmuTable():void{
         $path = (new Config)->get('path_to_tables');
         if (is_dir($path)) {
             foreach (Finder::create()->files()->name('*.ndjson')->in($path) as $file) {
