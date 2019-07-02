@@ -2,7 +2,7 @@
 ![Code Coverage Status](tests/report/coverage.svg)
 
 
-# Immu-table
+# ImmuTable
 
 Package for using immutable ndjson models instead of regular SQL or NoSQL databases with sintax similar to Laravel Eloquent.
 
