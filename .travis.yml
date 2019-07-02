@@ -17,6 +17,6 @@ cache:
 
 deploy:
   provider: script
-  script: curl -XPOST -H'content-type:application/json' 'https://packagist.org/api/update-package?username=guifcoelho&apiToken=${PACKAGIST_TOKEN}' -d'{"repository":{"url":"https://packagist.org/packages/guifcoelho/Immutable"}}'
+  script: curl -XPOST -H'content-type:application/json' 'https://packagist.org/api/update-package?username=guifcoelho&apiToken=${PACKAGIST_TOKEN}' -d'{"repository":{"url":"https://packagist.org/packages/guifcoelho/immu-table"}}'
   on:
     branch: master

@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/guifcoelho/Immutable.svg?branch=master)](https://travis-ci.com/guifcoelho/Immutable)
+[![Build Status](https://travis-ci.com/guifcoelho/ImmuTable.svg?branch=master)](https://travis-ci.com/guifcoelho/ImmuTable)
 ![Code Coverage Status](tests/report/coverage.svg)
 
 
@@ -10,7 +10,7 @@ DO NOT use this package if your models' data are likely to change.
 
 # Installation
 
-`composer require guifcoelho/Immutable`
+`composer require guifcoelho/immu-table`
 
 # How to use it
 
