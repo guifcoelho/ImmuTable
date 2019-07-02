@@ -10,7 +10,7 @@ DO NOT use this package if your models' data are likely to change.
 
 # Installation
 
-`composer require guifcoelho/json-models`
+`composer require guifcoelho/Immutable`
 
 # How to use it
 
