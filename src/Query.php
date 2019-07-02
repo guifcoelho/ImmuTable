@@ -100,18 +100,12 @@ class Query{
         $primary_key_name = $this->class::getPrimaryKey();
         if(count($this->queried) == 0){
             $self = $this;
-            $data = $engine->filter(function($item) use($self, $field, $args){
-                return $self->evalModelItem($item->$field, $args['sign'], $args['value']);
-            });
-            
-            if($data == null){
-                $data = [];
-            }elseif(is_subclass_of($data, Model::class)){
-                $data = [$data->toArray()];
-            }else{
-                $data = $data->toArray();
-            }
-
+            $data = $engine->filter(
+                function($item) use($self, $field, $args){
+                    return $self->evalModelItem($item->$field, $args['sign'], $args['value']);
+                }
+            );
+            $data = $data->toArray();
             $query = array_values(array_map(function($item) use($primary_key_name){
                 return $item[$primary_key_name];
             }, $data));
@@ -155,9 +149,10 @@ class Query{
         }
         $first_item = $this->queried[0];
         $primary_key = $this->class::getPrimaryKey();
-        return (new Engine($this->class))->filter(function($item) use($primary_key, $first_item){
+        $query = (new Engine($this->class))->filter(function($item) use($primary_key, $first_item){
             return $item->$primary_key == $first_item;
         });
+        return count($query) == 0 ? null : $query->first();
     }
 
     
@@ -167,11 +162,7 @@ class Query{
      */
     public function all()
     {
-        $query = (new Engine($this->class))->filter(function($item){return true;});
-        if($query == null){
-            return [];
-        }
-        return $query;
+        return (new Engine($this->class))->filter(function($item){return true;});
     }
 
     /**

@@ -62,7 +62,7 @@ class Engine{
      *
      * @return array|boolean
      */
-    protected function chunk()
+    protected function loadNextChunk()
     {
         $file = $this->class::getTablePath();
         if(!file_exists($file)){
@@ -107,29 +107,6 @@ class Engine{
     }
 
     /**
-     * Loads and transforms item by item
-     *
-     * @param callable $callback
-     * @return null|\guifcoelho\JsonModels\Model|\Illuminate\Support\Collection
-     */
-    public function map(callable $callback)
-    {
-        $data = [];
-        while($chunk = $this->chunk()){
-            foreach($chunk as $item){
-                $data[] = $callback($item);
-            }
-        }
-        if(count($data) == 0){
-            return null;
-        }elseif(count($data) == 1){
-            return $data[0];
-        }else{
-            return new Collection($data);
-        }
-    }
-
-    /**
      * Loads and filters data
      *
      * @param callable $callback
@@ -138,22 +115,14 @@ class Engine{
     public function filter(callable $callback){
 
         $filter = [];
-        while($chunk = $this->chunk()){
+        while($chunk = $this->loadNextChunk()){
             foreach($chunk as $item){
                 if($callback($item)){
                     $filter[] = $item;
                 }
             }
         }
-        
-        if(count($filter) == 0){
-            return null;
-        }elseif(count($filter) == 1){
-            return $filter[0];
-        }else{
-            return new Collection($filter);
-        }
-
+        return new Collection($filter);
     }
 
     /**
@@ -165,7 +134,7 @@ class Engine{
     {
         $primary_key = $this->class::getPrimaryKey();
         $last_primary_key_value = 0;
-        while($chunk = $this->chunk()){
+        while($chunk = $this->loadNextChunk()){
             foreach($chunk as $item){
                 $last_primary_key_value = max($last_primary_key_value, $item->$primary_key);    
             }
