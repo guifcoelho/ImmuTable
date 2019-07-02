@@ -172,7 +172,9 @@ class Model implements Arrayable{
     {
         $arr = [];
         foreach($this->fields as $field){
-            $arr[$field] = $this->$field;
+            if(array_search($field, $this->hidden) === false){
+                $arr[$field] = $this->$field;
+            }
         }
         return $arr;
     }
