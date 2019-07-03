@@ -49,11 +49,13 @@ class Query{
         switch($sign){
             case '=':
             case '==': return $el == $value;
+            case '===': return $el === $value;
+            case '!=': return $el != $value;
+            case '!==': return $el !== $value;
             case '<': return $el < $value;
             case '>': return $el > $value;
             case '<=': return $el <= $value;
             case '>=': return $el >= $value;
-            case '===': return $el === $value;
             default: throw new ImmuTableException("The second argument must be a valid comparison sign");
         }
     }
