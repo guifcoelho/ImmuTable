@@ -6,8 +6,11 @@ use guifcoelho\ImmuTable\Config;
 use guifcoelho\ImmuTable\Query;
 use guifcoelho\ImmuTable\Exceptions\ImmuTableException;
 use Illuminate\Contracts\Support\Arrayable;
+use guifcoelho\ImmuTable\Relations\HasMany;
 
 class Model implements Arrayable{
+
+    use ModelRelations;
 
     /**
      * Table name
@@ -60,6 +63,11 @@ class Model implements Arrayable{
         return (new Config)->get('path_to_tables')."/{$table}.ndjson";
     }
 
+    /**
+     * Returns the list of table fields
+     *
+     * @return array
+     */
     public function getFields():array
     {
         return $this->fields;
@@ -74,12 +82,19 @@ class Model implements Arrayable{
     {
         return (new static)->primary_key;
     }
-
-    public static function getName():string
+   
+    /**
+     * Gets the primary key and sets it as foreign key style
+     *
+     * @param string $class
+     * @return string
+     */
+    public static function getPrimaryFieldAsForeign(): string
     {
-        $class = explode("\\", get_class(new static()));
-        return strtolower($class[count($class)-1]);
-
+        $class_name = explode("\\", get_class(new static));
+        $class_name = $class_name[count($class_name)-1];
+        $class_name = strtolower($class_name);
+        return $class_name . "_" . static::getPrimaryKey();
     }
 
     /**
@@ -120,49 +135,23 @@ class Model implements Arrayable{
     }
 
     /**
+     * Queries for a primary key
+     *
+     * @param int $value
+     * @return void
+     */
+    public static function find(int $value){
+        return (new Query(get_class(new static)))->where(static::getPrimaryKey(), $value)->first();
+    }
+
+    /**
      * Returns all data inside JsonModel table
      */
     public static function all(){
         return (new Query(get_class(new static)))->all();
     }
 
-    /**
-     * ```belongsTo``` relationship
-     *
-     * @param string $owner_class
-     * @param string $field
-     * @param string $field_in_owner_class
-     */
-    protected function belongsTo(string $owner_class, string $field = '', string $field_in_owner_class = ''){
-        $owner_primary_key = $owner_class::getPrimaryKey();
-        if($field == ''){
-            $owner_std_name = $owner_class::getName();
-            $field = "{$owner_std_name}_{$owner_primary_key}";
-        }
-        if($field_in_owner_class == ''){
-            $field_in_owner_class = $owner_primary_key;
-        }
-        return $owner_class::where($field_in_owner_class, $this->$field)->first();
-    }
-
-    /**
-     * ```hasMany``` relationship
-     *
-     * @param  string $child_class
-     * @param string $field_in_owned_class
-     * @param string $field
-     */
-    protected function hasMany(string $child_class, string $field_in_owned_class = '', string $field = ''){
-        if($field_in_owned_class == ''){
-            $owner_std_name = static::getName();
-            $field_in_owned_class = "{$owner_std_name}_{$this->primary_key}";
-        }
-        if($field == ''){
-            $field = $this->primary_key;
-        }
-        return $child_class::where($field_in_owned_class, $this->$field)->get();
-    }
-
+    
     /**
      * Extracts the data into an array.
      *

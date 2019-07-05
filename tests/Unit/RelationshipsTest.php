@@ -15,7 +15,7 @@ class RelationshipsTest extends TestCase
         $owned = ImmuTableFactory(SampleOwned::class, $this->factory_path)->create([
             'sample_id' => $owner->id
         ]);
-        $this->assertTrue($owned->owner()->id == $owner->id);
+        $this->assertTrue($owned->owner()->first()->id == $owner->id);
     }
 
     public function test_belongsTo_relationship_with_field_with_custom_name(){
@@ -23,7 +23,7 @@ class RelationshipsTest extends TestCase
         $owned = ImmuTableFactory(SampleOwned2::class, $this->factory_path)->create([
             'owner' => $owner->id
         ]);
-        $this->assertTrue($owned->owner()->id == $owner->id);
+        $this->assertTrue($owned->owner()->first()->id == $owner->id);
     }
 
     public function test_hasMany_relationship(){
@@ -34,7 +34,7 @@ class RelationshipsTest extends TestCase
             'sample_id' => $owner->id
         ]);
         $this->assertTrue(count(Sample::all()) > 0);
-        $collection_owned = $owner->owned();
+        $collection_owned = $owner->owned()->get();
         $this->assertTrue(count($collection_owned) == $size);
         foreach($collection_owned as $item){
             $this->assertTrue($item->sample_id == $owner->id);
@@ -49,7 +49,7 @@ class RelationshipsTest extends TestCase
             'owner' => $owner->id
         ]);
         $this->assertTrue(count(Sample::all()) > 0);
-        $collection_owned = $owner->owned2();
+        $collection_owned = $owner->owned2()->get();
         $this->assertTrue(count($collection_owned) == $size);
         foreach($collection_owned as $item){
             $this->assertTrue($item->owner == $owner->id);
