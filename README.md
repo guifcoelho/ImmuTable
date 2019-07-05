@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/guifcoelho/Immu-table.svg?branch=master)](https://travis-ci.com/guifcoelho/Immu-table)
+[![Build Status](https://travis-ci.com/guifcoelho/ImmuTable.svg?branch=master)](https://travis-ci.com/guifcoelho/ImmuTable)
 ![Code Coverage Status](tests/report/coverage.svg)
 
 
