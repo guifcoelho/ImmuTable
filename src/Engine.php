@@ -64,7 +64,7 @@ class Engine{
      */
     protected function loadNextChunk()
     {
-        $file = $this->class::getTablePath();
+        $file = (new $this->class)->getTablePath();
         if(!file_exists($file)){
             //Creates da table file if it does not exists
             file_put_contents($file, "");
@@ -132,7 +132,7 @@ class Engine{
      */
     public function currentPrimaryKey():int
     {
-        $primary_key = $this->class::getPrimaryKey();
+        $primary_key = (new $this->class)->getKeyName();
         $last_primary_key_value = 0;
         while($chunk = $this->loadNextChunk()){
             foreach($chunk as $item){
@@ -143,13 +143,13 @@ class Engine{
     }
 
     /**
-     * Inserts data at the end of the table
+     * Inserts data at the end of the table. IT SHOULD ONLY BE USED IN TESTING OR PROTOTYPING
      *
      * @param array $data
      * @return void
      */
     public function insert(array $data):void
     {
-        file_put_contents($this->class::getTablePath(), implode("\n", $data)."\n", FILE_APPEND);
+        file_put_contents((new $this->class)->getTablePath(), implode("\n", $data)."\n", FILE_APPEND);
     }
 }

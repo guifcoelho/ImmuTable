@@ -32,7 +32,7 @@ class Factory{
     protected $faker;
 
     /**
-     * The JsonModel class
+     * Subclass of \guifcoelho\ImmuTable\Model
      *
      * @var string
      */
@@ -100,12 +100,13 @@ class Factory{
             throw new ImmuTableException("No definitions set for class '{$this->class}'");
         }
         $collection = [];
+        $primary_key = (new $this->class)->getKeyName();
         foreach(range(1, $this->size) as $item){
             $definitions = call_user_func($this->definitions[$this->class], $this->faker);
             foreach($attributes as $key => $value){
                 $definitions[$key] = $value;
             }
-            $definitions[$this->class::getPrimaryKey()] = '';
+            $definitions[$primary_key] = '';
             $collection[] = new $this->class($definitions);
         }
         
@@ -141,7 +142,7 @@ class Factory{
         /*
         | Run afterCreating() methods...
         */
-        $primary_key = $this->class::getPrimaryKey();
+        $primary_key = (new $this->class)->getKeyName();
         $client = new Query($this->class);
         $last_primary_key = $client->getLastPrimaryKeyValue();
 

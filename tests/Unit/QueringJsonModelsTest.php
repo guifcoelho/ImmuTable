@@ -71,11 +71,13 @@ class CreateModelTest extends TestCase
     }
 
     public function test_querying_empty_table(){
-        if(file_exists(Sample::getTablePath())){
-            unlink(Sample::getTablePath());
+        $sample_table = (new Sample())->getTablePath();
+        if(file_exists($sample_table)){
+            unlink($sample_table);
         }
-        if(file_exists(SampleOwned::getTablePath())){
-            unlink(SampleOwned::getTablePath());
+        $sample_owned_table = (new SampleOwned)->getTablePath();
+        if(file_exists($sample_owned_table)){
+            unlink($sample_owned_table);
         }
         $this->assertTrue(count(Sample::all()) == 0);
     }

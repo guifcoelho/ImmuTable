@@ -20,7 +20,7 @@ trait ImmuTableAssertions{
             is_subclass_of($class, Model::class),
             "'{$class}' is not a subclass of '".Model::class."'"
         );
-        $primary_key = $class::getPrimaryKey();
+        $primary_key = (new $class)->getKeyName();
         $query = [];
         if(array_key_exists($primary_key, $expected)){
             $query = $class::where($primary_key, $expected[$primary_key])->first()->toArray();

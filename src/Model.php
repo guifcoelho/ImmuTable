@@ -6,11 +6,8 @@ use guifcoelho\ImmuTable\Config;
 use guifcoelho\ImmuTable\Query;
 use guifcoelho\ImmuTable\Exceptions\ImmuTableException;
 use Illuminate\Contracts\Support\Arrayable;
-use guifcoelho\ImmuTable\Relations\HasMany;
-
+use Illuminate\Support\Str;
 class Model implements Arrayable{
-
-    use ModelRelations;
 
     /**
      * Table name
@@ -57,10 +54,9 @@ class Model implements Arrayable{
      *
      * @return string
      */
-    public static function getTablePath(): string
+    public function getTablePath(): string
     {
-        $table = (new static)->table;
-        return (new Config)->get('path_to_tables')."/{$table}.ndjson";
+        return (new Config)->get('path_to_tables')."/{$this->table}.ndjson";
     }
 
     /**
@@ -78,23 +74,21 @@ class Model implements Arrayable{
      *
      * @return integer
      */
-    public static function getPrimaryKey():string
+    public function getKeyName():string
     {
-        return (new static)->primary_key;
+        return $this->primary_key;
     }
-   
+
+
     /**
      * Gets the primary key and sets it as foreign key style
      *
      * @param string $class
      * @return string
      */
-    public static function getPrimaryFieldAsForeign(): string
+    public function getForeignKey(): string
     {
-        $class_name = explode("\\", get_class(new static));
-        $class_name = $class_name[count($class_name)-1];
-        $class_name = strtolower($class_name);
-        return $class_name . "_" . static::getPrimaryKey();
+        return Str::snake(class_basename($this)) . "_" . $this->getKeyName();
     }
 
     /**

@@ -207,7 +207,7 @@ class Query{
         }else{
             throw new ImmuTableException("The data must be a subclass of '".Model::class."' or an instance of '".Collection::class."'");
         }
-        $primary_key = $this->class::getPrimaryKey();
+        $primary_key = (new $this->class)->getKeyName();
         if(is_subclass_of($data, Model::class)){
             if($data->$primary_key == ""){
                 throw new ImmuTableException("Primary key value not defined");
