@@ -3,8 +3,6 @@
 namespace guifcoelho\ImmuTable\Relations;
 
 use Illuminate\Support\Collection;
-use guifcoelho\ImmuTable\Exceptions\ImmuTableException;
-use guifcoelho\ImmuTable\Model;
 
 class HasMany extends HasOne{
 
@@ -15,6 +13,6 @@ class HasMany extends HasOne{
      */
     public function get():Collection
     {
-        return $this->children::where($this->field_in_owned_models, $this->field_value_in_owner)->get();
+        return $this->children_class::where($this->field_in_children_models, $this->parent->{$this->field_in_parent})->get();
     }
 }

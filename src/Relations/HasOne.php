@@ -2,43 +2,45 @@
 
 namespace guifcoelho\ImmuTable\Relations;
 
-use Illuminate\Support\Collection;
-use guifcoelho\ImmuTable\Exceptions\ImmuTableException;
-use guifcoelho\ImmuTable\Model;
-
 class HasOne {
 
     /**
-     * The children model class
+     * The child model class
      *
      * @var string
      */
-    protected $children = "";
+    protected $children_class = "";
+
+    /**
+     * The parent model instance
+     */
+    protected $parent;
 
     /**
      * The owner field name inside the children models
      *
      * @var string
      */
-    protected $field_in_owned_models = "";
+    protected $field_in_children_models = "";
 
     /**
      * The owner field value
      *
      * @var string|int
      */
-    protected $field_value_in_owner;
+    protected $field_in_parent;
 
-    public function __construct(string $children, string $field_in_owned_models, $field_value_in_owner){
-        $this->children = $children;
-        $this->field_in_owned_models = $field_in_owned_models;
-        $this->field_value_in_owner = $field_value_in_owner;
+    public function __construct(string $children_class, $parent, string $field_in_children_models, $field_in_parent){
+        $this->children_class = $children_class;
+        $this->parent = $parent;
+        $this->field_in_children_models = $field_in_children_models == '' ? $parent->getForeignKey() : $field_in_children_models;
+        $this->field_in_parent = $field_in_parent == '' ? $parent->getKeyName() : $field_in_parent;
     }
 
     /**
      * Returns the first child of the owner model
      */
     public function first(){
-        return $this->children::where($this->field_in_owned_models, $this->field_value_in_owner)->first();
+        return $this->children_class::where($this->field_in_children_models, $this->parent->{$this->field_in_parent})->first();
     }
 }

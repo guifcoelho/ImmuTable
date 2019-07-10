@@ -5,11 +5,14 @@ namespace guifcoelho\ImmuTable\Tests\Unit;
 use guifcoelho\ImmuTable\Tests\TestCase;
 
 use guifcoelho\ImmuTable\Tests\Unit\SampleModels\Sample;
+use guifcoelho\ImmuTable\Tests\Unit\SampleModels\Sample2;
 use guifcoelho\ImmuTable\Tests\Unit\SampleModels\SampleOwned;
 use guifcoelho\ImmuTable\Tests\Unit\SampleModels\SampleOwned2;
 
 class RelationshipsTest extends TestCase
 {
+    use \guifcoelho\ImmuTable\Testing\Support\ArrayAssertions;
+    
     public function test_belongsTo_relationship(){
         $owner = ImmuTableFactory(Sample::class,$this->factory_path)->create();
         $owned = ImmuTableFactory(SampleOwned::class, $this->factory_path)->create([
@@ -54,5 +57,16 @@ class RelationshipsTest extends TestCase
         foreach($collection_owned as $item){
             $this->assertTrue($item->owner == $owner->id);
         }
+    }
+
+    public function test_hasOne_relationship(){
+        $dummy = ImmuTableFactory(Sample2::class, 5, $this->factory_path)->create();
+        $owner = $dummy[0];
+        $size = rand(1,10);
+        $owned = ImmuTableFactory(SampleOwned::class, $size, $this->factory_path)->create([
+            'sample2_id' => $owner->id
+        ]);
+        $this->assertFalse(\method_exists($owner->owned(), 'get'));
+        $this->assertSimilarArrays($owner->owned()->first()->toArray(), $owned->first()->toArray());
     }
 }

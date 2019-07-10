@@ -22,7 +22,8 @@
     "phpunit/phpunit": "^8",
     "fzaninotto/faker": "^1.8",
     "symfony/var-dumper": "^4.3",
-    "jaschilz/php-coverage-badger": "^2.0"
+    "jaschilz/php-coverage-badger": "^2.0",
+    "illuminate/database": "^5.8"
   },
   "autoload": {
     "psr-4": {
