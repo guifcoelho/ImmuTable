@@ -61,7 +61,7 @@ class Database {
      *
      * @return self
      */
-    public function boot():self{
+    public static function boot():self{
         $database = new static;
         $database->getManager()->bootEloquent();
         $database->getManager()->setAsGlobal();
