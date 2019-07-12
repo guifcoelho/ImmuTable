@@ -141,7 +141,7 @@ class BelongsToMany{
                 $this->pivot
                     ->builder()
                     ->where($this->field_in_pivot, $this->child->{$this->field})
-                    ->whereIn($this->parent_field_in_pivot, '!=', $id)
+                    ->whereIn($this->parent_field_in_pivot, $id)
                     ->get()
                     ->each(function($item){
                         $item->delete();        
@@ -150,7 +150,7 @@ class BelongsToMany{
                 $this->pivot
                     ->builder()
                     ->where($this->field_in_pivot, $this->child->{$this->field})
-                    ->where($this->parent_field_in_pivot, '!=', $id)
+                    ->where($this->parent_field_in_pivot, '=', $id)
                     ->get()
                     ->each(function($item){
                         $item->delete();    
@@ -167,33 +167,20 @@ class BelongsToMany{
      * @return self
      */
     public function sync(...$id):self{
-        if(func_num_args() == 0){
-            return $this->detach();
-        }else{
+        $this->detach();
+        if(func_num_args() > 0){
             if(count($id) == 1){
                 $id = $id[0];
             }
             if(is_array($id)){
-                $this->detach($id);
                 foreach($id as $item){
                     $this->attach($item);
                 }
             }else{
-                $this->detach($id);
                 $this->attach($id);
             }
         }
         return $this;
-    }
-
-    /**
-     * Toggles the relation. If it is attached, it will be detached. If it is detached, it will be attached
-     *
-     * @param string|int|array $id
-     * @return self
-     */
-    public function toggle($id):self{
-        //...
     }
 
     public function save($model):self{
