@@ -20,3 +20,4 @@ Thumbs.db
 composer.lock
 
 .composer
+.env
