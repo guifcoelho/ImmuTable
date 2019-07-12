@@ -16,7 +16,9 @@
   "require": {
     "php": "~7.3",
     "illuminate/config": "^5.8",
-    "symfony/finder": "^4.3"
+    "symfony/finder": "^4.3",
+    "vlucas/phpdotenv": "^3.4",
+    "illuminate/filesystem": "^5.8"
   },
   "require-dev": {
     "phpunit/phpunit": "^8",
@@ -41,7 +43,9 @@
     "tests-report-win": ".\\vendor\\bin\\phpunit --coverage-clover tests\\report\\coverage.xml --coverage-html tests\\report\\coverage-html && composer build-coverage-badge-win",
     "tests-report-linux": "./vendor/bin/phpunit --coverage-clover tests/report/coverage.xml --coverage-html tests/report/coverage-html && composer build-coverage-badge-linux",
     "build-coverage-badge-win": ".\\vendor\\bin\\php-coverage-badger tests\\report\\coverage.xml tests\\report\\coverage.svg",
-    "build-coverage-badge-linux": "./vendor/bin/php-coverage-badger tests/report/coverage.xml tests/report/coverage.svg"
+    "build-coverage-badge-linux": "./vendor/bin/php-coverage-badger tests/report/coverage.xml tests/report/coverage.svg",
+    "db-win": "php .\\src\\Testing\\DatabaseConsole.php",
+    "db-linux": "php ./src/Testing/DatabaseConsole.php"
   },
   "extra": {
     "branch-alias": {

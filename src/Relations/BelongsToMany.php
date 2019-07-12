@@ -2,14 +2,14 @@
 
 namespace guifcoelho\ImmuTable\Relations;
 
-use guifcoelho\ImmuTable\Relations\EloquentPivot as Pivot;
+use guifcoelho\ImmuTable\Relations\Pivot;
 
 class BelongsToMany{
 
     /**
      * The pivot table
      *
-     * @var \guifcoelho\ImmuTable\Relations\EloquentPivot
+     * @var \guifcoelho\ImmuTable\Relations\Pivot
      */
     protected $pivot;
 
@@ -68,17 +68,18 @@ class BelongsToMany{
         string $parent_class = '',
         $child,
         string $pivot_table = '',
-        string $field = '',
         string $field_in_pivot = '',
-        string $parent_field = '',
-        string $parent_field_in_pivot = ''
+        string $parent_field_in_pivot = '',
+        string $field = '',
+        string $parent_field = ''
     ){
         if($pivot_table == ''){
             $pivot_table = Pivot::defineTable(class_basename(new $parent_class()), class_basename($child));
         }
         $this->setPivot($pivot_table);
+        $this->parent_class = $parent_class;
         $this->child = $child;
-        $this->field = $field == '' ? $child->getKeyName() : $field; 
+        $this->field = $field == '' ? $child->getKeyName() : $field;
         $this->field_in_pivot = $field_in_pivot == '' ? $child->getForeignKey() : $field_in_pivot;
         $this->parent_field = $parent_field == '' ? (new $parent_class)->getKeyName() : $parent_field;
         $this->parent_field_in_pivot = $parent_field_in_pivot == '' ? (new $parent_class)->getForeignKey() : $parent_field_in_pivot;
@@ -90,7 +91,8 @@ class BelongsToMany{
      * @param string $pivot_table
      * @return void
      */
-    protected function setPivot(string $pivot_table):void{
+    protected function setPivot(string $pivot_table):void
+    {
         $fillable = [$this->field_in_pivot, $this->parent_field_in_pivot];
         $this->pivot = (new Pivot())->setTable($pivot_table)->fillable($fillable);
     }
@@ -185,7 +187,7 @@ class BelongsToMany{
     }
 
     /**
-     * Toggles the relation. If it is attached, it will be detached. Otherwise, if it is detached, it will be attached
+     * Toggles the relation. If it is attached, it will be detached. If it is detached, it will be attached
      *
      * @param string|int|array $id
      * @return self
@@ -197,5 +199,10 @@ class BelongsToMany{
     public function save($model):self{
         $this->attach($model->{$this->parent_field});
         return $this;
+    }
+
+    public function getPivot():Pivot
+    {
+        return $this->pivot;
     }
 }

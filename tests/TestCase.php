@@ -26,9 +26,6 @@ class TestCase extends PHPUnit
         parent::setUp();
         $this->bootstrap();
         $this->refreshImmuTable();
-        if(method_exists($this, 'bootDatabase')){
-            $this->bootDatabase();
-        }
     }
 
     public function tearDown():void
