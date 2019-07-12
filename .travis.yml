@@ -3,9 +3,13 @@ language: php
 php:
   - 7.3
 
+services:
+  - mysql
+
 before_script:
   - composer self-update
   - composer install --optimize-autoloader --no-interaction
+  - composer db-linux migrate
 
 script:
   - ./vendor/bin/phpunit
