@@ -6,6 +6,9 @@ php:
 services:
   - mysql
 
+before_install:
+  - mysql -e 'CREATE DATABASE myapp_test;'
+
 before_script:
   - composer self-update
   - composer install --optimize-autoloader --no-interaction
