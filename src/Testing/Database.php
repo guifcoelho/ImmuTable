@@ -38,8 +38,10 @@ class Database {
      * Instanciates a Database object
      */
     public function __construct(){
-        $dotenv = \Dotenv\Dotenv::create(__DIR__.'/../../');
-        $dotenv->load();
+        if(file_exists(__DIR__.'/../../.env')){
+            $dotenv = \Dotenv\Dotenv::create(__DIR__.'/../../');
+            $dotenv->load();
+        }       
 
         $this->manager = new Manager;
 
