@@ -116,7 +116,7 @@ class Sample1 extends Model
     protected $table = "table_example";
 
     public function owner(){
-        return $this->ImmuTable_belongToOne(Sample2::class [, $field, $field_in_parent_class]);
+        return $this->ImmuTable_belongsTo(Sample2::class [, $field, $field_in_parent_class]);
     }
 
     public function parents(){
@@ -134,7 +134,7 @@ class Sample1 extends Model
 ```
 In the example above, the fields inside brackets are optional. See below a better explanation:
 
-- `ImmuTable_belongsToOne`: You must provide the parent class name. If necessary, provide the foreign key name inside the child model, and the related field name inside the parent model.
+- `ImmuTable_belongsTo`: You must provide the parent class name. If necessary, provide the foreign key name inside the child model, and the related field name inside the parent model.
 - `ImmuTable_belongsToMany`: You must provide the parent class name. If necessary, provide the pivot table name, the current model's foreign key name in the pivot table, the parent model's foreign key name in the pivot table, the related current model's field name, and the related parent model's field name.
 - `ImmuTable_hasOne`: You must provide the child class name. If necessary, provide the foreign key name inside the child model and the related field name inside the parent model.
 - `ImmuTable_hasMany`: You must provide the children class name. If necessary, provide the foreign key name inside the children models and the related field name inside the parent model.
