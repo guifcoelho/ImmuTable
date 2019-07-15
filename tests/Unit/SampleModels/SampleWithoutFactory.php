@@ -7,7 +7,7 @@ use guifcoelho\ImmuTable\Model;
 class SampleWithoutFactory extends Model
 {
 
-    protected $fillable = ['id', 'owner'];
+    protected $fields = ['id', 'owner'];
 
     protected $table = "test_table_without_factory";
 

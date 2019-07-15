@@ -2,16 +2,12 @@
 
 namespace guifcoelho\ImmuTable\Tests\Unit\SampleModels;
 
-use guifcoelho\ImmuTable\Relations\ImmuTableRelations;
-
 use guifcoelho\ImmuTable\Model;
 use guifcoelho\ImmuTable\Tests\Unit\SampleModels\Sample;
 use guifcoelho\ImmuTable\Tests\Unit\SampleModels\Sample2;
 
 class SampleOwned extends Model
 {
-    use ImmuTableRelations;
-
     protected $fields = ['id', 'sample_id', 'sample2_id'];
 
     protected $table = "test_table_owned";

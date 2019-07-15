@@ -7,8 +7,12 @@ use guifcoelho\ImmuTable\Query;
 use guifcoelho\ImmuTable\Exceptions\ImmuTableException;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Str;
+use guifcoelho\ImmuTable\Relations\ImmuTableRelations;
+
 class Model implements Arrayable{
 
+    use ImmuTableRelations;
+    
     /**
      * Table name
      *

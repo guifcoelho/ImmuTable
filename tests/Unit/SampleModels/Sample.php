@@ -2,18 +2,12 @@
 
 namespace guifcoelho\ImmuTable\Tests\Unit\SampleModels;
 
-use guifcoelho\ImmuTable\Relations\ImmuTableRelations;
-
 use guifcoelho\ImmuTable\Model;
 use guifcoelho\ImmuTable\Tests\Unit\SampleModels\SampleOwned;
 use guifcoelho\ImmuTable\Tests\Unit\SampleModels\SampleOwned2;
 
 class Sample extends Model
 {
-    use ImmuTableRelations;
-
-    protected $fillable = ['id', 'name', 'email'];
-
     protected $table = "test_table";
 
     public function owned(){
