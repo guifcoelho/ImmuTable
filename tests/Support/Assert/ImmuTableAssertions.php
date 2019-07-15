@@ -1,13 +1,14 @@
 <?php
 
-namespace guifcoelho\ImmuTable\Testing\Support;
+namespace guifcoelho\ImmuTable\Tests\Support\Assert;
 
 use PHPUnit\Framework\Assert as PHPUnit;
 use guifcoelho\ImmuTable\Model;
+use guifcoelho\ImmuTable\Tests\Support\Assert\ArrayAssertions;
 
 trait ImmuTableAssertions{
 
-    use \guifcoelho\ImmuTable\Testing\Support\ArrayAssertions;
+    use ArrayAssertions;
 
     /**
      * Asserts if a json model table has the expected data

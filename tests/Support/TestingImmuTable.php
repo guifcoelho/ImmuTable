@@ -1,6 +1,6 @@
 <?php
 
-namespace guifcoelho\ImmuTable\Testing;
+namespace guifcoelho\ImmuTable\Tests\Support;
 
 use guifcoelho\ImmuTable\Model;
 use guifcoelho\ImmuTable\Config;
@@ -9,7 +9,7 @@ use Symfony\Component\Finder\Finder;
 trait TestingImmuTable
 {
     protected function bootstrap():void{
-        require __DIR__."/Support/Functions.php";
+        require __DIR__."/../../src/Factory/Functions.php";
         $this->setTablesPath();
     }
 

@@ -2,7 +2,6 @@
 
 namespace guifcoelho\ImmuTable;
 
-use JsonMachine\JsonMachine;
 use guifcoelho\ImmuTable\Model;
 use guifcoelho\ImmuTable\Engine;
 use Illuminate\Support\Collection;

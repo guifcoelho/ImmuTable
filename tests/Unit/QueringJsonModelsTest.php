@@ -8,6 +8,7 @@ use guifcoelho\ImmuTable\Exceptions\ImmuTableException;
 use guifcoelho\ImmuTable\Query;
 use guifcoelho\ImmuTable\Model;
 use Illuminate\Support\Collection;
+use guifcoelho\ImmuTable\Tests\Support\Assert\ImmuTableAssertions;
 
 use guifcoelho\ImmuTable\Tests\Unit\SampleModels\Sample;
 use guifcoelho\ImmuTable\Tests\Unit\SampleModels\Sample3;
@@ -16,7 +17,7 @@ use guifcoelho\ImmuTable\Tests\Unit\SampleModels\SampleOwned;
 
 class CreateModelTest extends TestCase
 {
-    use \guifcoelho\ImmuTable\Testing\Support\ImmuTableAssertions;
+    use ImmuTableAssertions;
 
     public function test_create_and_load_json_model()
     {

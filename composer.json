@@ -44,8 +44,8 @@
     "tests-report-linux": "./vendor/bin/phpunit --coverage-clover tests/report/coverage.xml --coverage-html tests/report/coverage-html && composer build-coverage-badge-linux",
     "build-coverage-badge-win": ".\\vendor\\bin\\php-coverage-badger tests\\report\\coverage.xml tests\\report\\coverage.svg",
     "build-coverage-badge-linux": "./vendor/bin/php-coverage-badger tests/report/coverage.xml tests/report/coverage.svg",
-    "db-win": "php .\\src\\Testing\\DatabaseConsole.php",
-    "db-linux": "php ./src/Testing/DatabaseConsole.php"
+    "db-win": "php .\\tests\\Support\\DatabaseConsole.php",
+    "db-linux": "php ./tests/Support/DatabaseConsole.php"
   },
   "extra": {
     "branch-alias": {

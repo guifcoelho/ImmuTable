@@ -3,7 +3,7 @@
 namespace guifcoelho\ImmuTable\Tests;
 
 use PHPUnit\Framework\TestCase as PHPUnit;
-use guifcoelho\ImmuTable\Testing\TestingImmuTable;
+use guifcoelho\ImmuTable\Tests\Support\TestingImmuTable;
 
 
 /**

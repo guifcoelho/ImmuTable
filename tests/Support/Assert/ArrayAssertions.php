@@ -1,6 +1,6 @@
 <?php
 
-namespace guifcoelho\ImmuTable\Testing\Support;
+namespace guifcoelho\ImmuTable\Tests\Support\Assert;
 
 use PHPUnit\Framework\Assert as PHPUnit;
 

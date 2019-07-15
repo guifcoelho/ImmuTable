@@ -1,9 +1,9 @@
 <?php
 
-namespace guifcoelho\ImmuTable\Testing;
+namespace guifcoelho\ImmuTable\Tests\Support;
 
 use Illuminate\Database\Capsule\Manager;
-use guifcoelho\ImmuTable\Testing\Support\DatabaseAssertions;
+use guifcoelho\ImmuTable\Tests\Support\Assert\DatabaseAssertions;
 use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Database\Migrations\DatabaseMigrationRepository;
 use Illuminate\Database\ConnectionResolver;

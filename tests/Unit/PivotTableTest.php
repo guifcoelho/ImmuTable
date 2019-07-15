@@ -3,7 +3,7 @@
 namespace guifcoelho\ImmuTable\Tests\Unit;
 
 use guifcoelho\ImmuTable\Tests\TestCase;
-use guifcoelho\ImmuTable\Testing\TestingDatabase;
+use guifcoelho\ImmuTable\Tests\Support\TestingDatabase;
 use guifcoelho\ImmuTable\Relations\Pivot;
 
 use guifcoelho\ImmuTable\Tests\Unit\SampleModels\Sample;

@@ -4,6 +4,7 @@ namespace guifcoelho\ImmuTable\Tests\Unit;
 
 use guifcoelho\ImmuTable\Tests\TestCase;
 use guifcoelho\ImmuTable\Exceptions\ImmuTableException;
+use guifcoelho\ImmuTable\Tests\Support\Assert\ImmuTableAssertions;
 
 use guifcoelho\ImmuTable\Model;
 use Illuminate\Support\Collection;
@@ -13,7 +14,7 @@ use guifcoelho\ImmuTable\Tests\Unit\SampleModels\SampleWithoutFactory;
 
 class ImmuTableFactoryTest extends TestCase
 {
-    use \guifcoelho\ImmuTable\Testing\Support\ImmuTableAssertions;
+    use ImmuTableAssertions;
     
     public function test_making_one_json_model()
     {

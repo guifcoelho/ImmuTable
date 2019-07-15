@@ -1,6 +1,6 @@
 <?php
 
-namespace guifcoelho\ImmuTable;
+namespace guifcoelho\ImmuTable\Relations;
 
 use guifcoelho\ImmuTable\Relations\HasOne;
 use guifcoelho\ImmuTable\Relations\HasMany;

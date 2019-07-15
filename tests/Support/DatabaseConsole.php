@@ -2,7 +2,7 @@
 
 require_once __DIR__."/../../vendor/autoload.php";
 
-use guifcoelho\ImmuTable\Testing\Database;
+use guifcoelho\ImmuTable\Tests\Support\Database;
 
 class ArgvInput{
 

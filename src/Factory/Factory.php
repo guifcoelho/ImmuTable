@@ -1,12 +1,12 @@
 <?php
 
-namespace guifcoelho\ImmuTable;
+namespace guifcoelho\ImmuTable\Factory;
 
 use Symfony\Component\Finder\Finder;
 use guifcoelho\ImmuTable\Model;
-use guifcoelho\ImmuTable\Client;
 use Illuminate\Support\Collection;
 use guifcoelho\ImmuTable\Exceptions\ImmuTableException;
+use guifcoelho\ImmuTable\Query;
 
 class Factory{
 

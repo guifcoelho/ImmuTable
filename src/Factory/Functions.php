@@ -1,7 +1,7 @@
 <?php
 
 use guifcoelho\ImmuTable\Model;
-use guifcoelho\ImmuTable\Factory;
+use guifcoelho\ImmuTable\Factory\Factory;
 use guifcoelho\ImmuTable\Config;
 use guifcoelho\ImmuTable\Exceptions\ImmuTableException;
 

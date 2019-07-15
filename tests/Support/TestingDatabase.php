@@ -1,9 +1,9 @@
 <?php
 
-namespace guifcoelho\ImmuTable\Testing;
+namespace guifcoelho\ImmuTable\Tests\Support;
 
-use guifcoelho\ImmuTable\Testing\Database;
-use guifcoelho\ImmuTable\Testing\Support\DatabaseAssertions;
+use guifcoelho\ImmuTable\Tests\Support\Database;
+use guifcoelho\ImmuTable\Tests\Support\Assert\DatabaseAssertions;
 
 trait TestingDatabase {
 

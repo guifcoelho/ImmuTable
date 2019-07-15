@@ -2,7 +2,7 @@
 
 namespace guifcoelho\ImmuTable\Tests\Unit\SampleModels;
 
-use guifcoelho\ImmuTable\ImmuTableRelations;
+use guifcoelho\ImmuTable\Relations\ImmuTableRelations;
 
 use guifcoelho\ImmuTable\Model;
 
