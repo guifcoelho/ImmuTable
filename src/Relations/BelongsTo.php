@@ -5,7 +5,7 @@ namespace guifcoelho\ImmuTable\Relations;
 class BelongsTo {
 
     /**
-     * The owner model class
+     * The parent model class
      *
      * @var string
      */
@@ -17,19 +17,27 @@ class BelongsTo {
     protected $child;
 
     /**
-     * The field name in the owner model
+     * The field name in the parent model
      *
      * @var string
      */
     protected $field_in_parent = "";
 
     /**
-     * The owner field inside the child model
+     * The parent field inside the child model
      *
      * @var string|int
      */
     protected $field_in_child = '';
 
+    /**
+     * Instanciates a new BelongsTo relation
+     *
+     * @param string $parent_class
+     * @param $child
+     * @param string $field_in_child
+     * @param string $field_in_parent
+     */
     public function __construct(string $parent_class, $child, string $field_in_child, string $field_in_parent){
         $this->parent_class = $parent_class;
         $this->child = $child;
@@ -40,7 +48,7 @@ class BelongsTo {
     }
 
     /**
-     * Returns the owner model
+     * Returns the parent model
      */
     public function first(){
         return $this->parent_class::where($this->field_in_parent, $this->child->{$this->field_in_child})->first();

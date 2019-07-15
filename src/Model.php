@@ -32,14 +32,14 @@ class Model implements Arrayable{
     protected $primary_key = 'id';
 
     /**
-     * All required table fields. If any field name is provided, the data loading will require them.
+     * All required table fields. When loading data, we will only read the fields in the array.
      *
      * @var array
      */
     protected $fields = [];
 
     /**
-     * Creates a new JsonModel object
+     * Instanciates a new ImmuTable model
      *
      * @param array $dados
      */
@@ -70,9 +70,9 @@ class Model implements Arrayable{
     }
 
     /**
-     * Returns the table primary key
+     * Returns the table primary key name
      *
-     * @return integer
+     * @return string
      */
     public function getKeyName():string
     {
@@ -81,9 +81,8 @@ class Model implements Arrayable{
 
 
     /**
-     * Gets the primary key and sets it as foreign key style
-     *
-     * @param string $class
+     * Returns the primary key name as a foreign key
+     * 
      * @return string
      */
     public function getForeignKey(): string
@@ -92,7 +91,7 @@ class Model implements Arrayable{
     }
 
     /**
-     * Loads the data fields into the JsonModel. It will respect the listed fields.
+     * Loads data into the model.
      *
      * @param array $data
      * @return void
@@ -116,10 +115,10 @@ class Model implements Arrayable{
     }
 
     /**
-     * Querys the json table with
+     * Queries the model's table
      *
      * @param string $field
-     * @param ...$params Must provide comparison sign and value (sign is optional)
+     * @param ...$params Must provide comparison sign and/or value (sign is optional)
      * 
      * @return Query
      */
@@ -129,17 +128,17 @@ class Model implements Arrayable{
     }
 
     /**
-     * Queries for a primary key
+     * Queries for a primary key value
      *
-     * @param int $value
+     * @param int $id
      * @return void
      */
-    public static function find(int $value){
-        return (new Query(get_class(new static)))->where(static::getPrimaryKey(), $value)->first();
+    public static function find(int $id){
+        return (new Query(get_class(new static)))->where(static::getPrimaryKey(), $id)->first();
     }
 
     /**
-     * Returns all data inside JsonModel table
+     * Returns all data inside model's table
      */
     public static function all(){
         return (new Query(get_class(new static)))->all();

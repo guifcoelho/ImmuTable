@@ -17,21 +17,21 @@ class Engine{
     protected $class = "";
 
     /**
-     * Size of each chunk of loaded data
+     * The size of each chunk of loaded data
      *
      * @var integer
      */
     protected $chunk_size = 0;
 
     /**
-     * Stream resource to load data
+     * The stream resource
      *
      * @var stream
      */
     protected $handle;
 
     /**
-     * Current position within the data file
+     * Current position within the file
      *
      * @var integer
      */
@@ -45,7 +45,7 @@ class Engine{
     protected $data = [];
 
     /**
-     * Instanciates a new Client class
+     * Instanciates a new Engine object
      *
      * @param string $class
      */
@@ -58,7 +58,7 @@ class Engine{
     }
 
     /**
-     * Loads a new chunk of data. It will return false after the end of the file
+     * Loads a new data chunk. It will return false after the end of the file.
      *
      * @return array|boolean
      */
@@ -107,7 +107,7 @@ class Engine{
     }
 
     /**
-     * Loads and filters data
+     * Filters data against a `$callback` function
      *
      * @param callable $callback
      * @return null|\guifcoelho\ImmuTable\Model|\Illuminate\Support\Collection
@@ -126,7 +126,7 @@ class Engine{
     }
 
     /**
-     * Gets the last primary key (as defined in the JsonModel) of the json file
+     * Gets the highest value for the model's primary key
      *
      * @return integer
      */
@@ -143,7 +143,9 @@ class Engine{
     }
 
     /**
-     * Inserts data at the end of the table. IT SHOULD ONLY BE USED IN TESTING OR PROTOTYPING
+     * Inserts data at the end of the table.
+     * 
+     * IT SHOULD ONLY BE USED IN TESTING OR PROTOTYPING
      *
      * @param array $data
      * @return void

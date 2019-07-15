@@ -11,14 +11,14 @@ use guifcoelho\ImmuTable\Query;
 class Factory{
 
     /**
-     * List of factory definitions of each JsonModel class
+     * List of loaded factory definitions
      *
      * @var array
      */
     protected $definitions = [];
 
     /**
-     * Path to factories folder
+     * Path to factories repository
      *
      * @var string
      */
@@ -32,7 +32,7 @@ class Factory{
     protected $faker;
 
     /**
-     * Subclass of \guifcoelho\ImmuTable\Model
+     * The model class. Must be a subclass of `\guifcoelho\ImmuTable\Model`
      *
      * @var string
      */
@@ -75,7 +75,7 @@ class Factory{
     }
 
     /**
-     * Sets the definition for new JsonModel factory.
+     * Sets the definition for new factory.
      * 
      * It will not register if `$class` is not subclass of `\guifcoelho\ImmuTable\Model`
      *
@@ -114,12 +114,11 @@ class Factory{
             return $collection[0];
         }
         
-        
         return new Collection($collection);
     }
 
     /**
-     * Makes a JsonModel object or a collection of JsonModel objects.
+     * Makes an ImmuTable model or collection of ImmuTable models.
      *
      * @param array $attributes
      */
@@ -133,7 +132,7 @@ class Factory{
     }
 
     /**
-     * Creates a JsonModel object or a collection of JsonModel objects. It will write into the json file
+     * Creates an ImmuTable model or collection of ImmuTable models. It will write into the table.
      *
      * @param array $attributes
      */

@@ -36,8 +36,6 @@ class BelongsToMany{
 
     /**
      * The child model
-     *
-     * @var
      */
     protected $child;
 

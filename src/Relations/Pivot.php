@@ -10,9 +10,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pivot extends Model {
 
+    /**
+     * The query builder instance
+     *
+     * @var \guifcoelho\ImmuTable\Relations\PivotQueryBuilder
+     */
     protected $builder;
 
-    public function builder(){
+    /**
+     * Returns the query builder instance
+     *
+     * @return \guifcoelho\ImmuTable\Relations\PivotQueryBuilder
+     */
+    public function builder():PivotQueryBuilder
+    {
         if($this->builder == null){
             $query_builder = new QueryBuilder($this->getConnection());
             $this->builder = (new PivotQueryBuilder($query_builder))->setModel($this);
@@ -20,7 +31,15 @@ class Pivot extends Model {
         return $this->builder;
     }
 
-    public static function defineTable($parent, $child){
+    /**
+     * Returns the pivot table name according to parent and child model classes
+     *
+     * @param string $parent
+     * @param string $child
+     * @return string
+     */
+    public static function defineTable(string $parent, string $child):string
+    {
         $classes = [
             Str::plural(Str::snake($parent)),
             Str::plural(Str::snake($child))

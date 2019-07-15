@@ -10,7 +10,7 @@ use guifcoelho\ImmuTable\Exceptions\ImmuTableException;
 class Query{
 
     /**
-     * Model class name. Must be a subclass of `\guifcoelho\ImmuTable\Model`
+     * The model class name. Must be a subclass of `\guifcoelho\ImmuTable\Model`
      *
      * @var string
      */
@@ -24,9 +24,9 @@ class Query{
     protected $query = [];
 
     /**
-     * Instanciates a Query object
+     * Instanciates a `\guifcoelho\ImmuTable\Query` object
      *
-     * @param array $data
+     * @param string $class
      */
     public function __construct(string $class){
         if(!is_subclass_of($class, Model::class)){
@@ -36,11 +36,11 @@ class Query{
     }
 
     /**
-     * Evaluates a JsonModel object according to its field, comparison sign and value searched
+     * Evaluates the comparison with the provided sign
      *
-     * @param mixed $el
+     * @param int|string $el
      * @param string $sign
-     * @param mixed $value
+     * @param int|string $value
      * @return boolean
      */
     private function evalModelItem($el, string $sign, $value):bool
@@ -88,10 +88,10 @@ class Query{
     }
 
     /**
-     * Queries the JsonModel table
+     * Queries the table with the `where` statement
      *
      * @param string $field
-     * @param ...$params Must provide comparison sign and value (sign is optional)
+     * @param ...$params Must provide comparison sign and/or value (sign is optional)
      * @return self
      */
     public function where(string $field, ...$params):self
@@ -102,7 +102,7 @@ class Query{
     }  
     
     /**
-     * Queries the json table with orWhere statement
+     * Queries the table with `orWhere` statement
      *
      * @param string $field
      * @param ...$params Must provide comparison sign and value (sign is optional)
@@ -114,7 +114,11 @@ class Query{
         return $this;
     }
 
-
+    /**
+     * Runs the set of registered queries
+     *
+     * @return Collection
+     */
     protected function run():Collection
     {
         if(count($this->query) == 0){
@@ -152,7 +156,7 @@ class Query{
     }
 
     /**
-     * Returns the first item of the collection. It will return null if nothing is found
+     * Returns the first item of the collection. It will return null if nothing is found.
      */
     public function first(){
         $query = $this->run();
@@ -162,10 +166,8 @@ class Query{
         return $query->first();
     }
 
-    
-
     /**
-     * Returns all data inside the json table
+     * Returns all data inside the table
      */
     public function all()
     {
@@ -173,7 +175,7 @@ class Query{
     }
 
     /**
-     * Gets the queried collection
+     * Returns the queried collection
      *
      * @return Collection
      */
@@ -183,7 +185,7 @@ class Query{
     }
 
     /**
-     * Gets the last primary key (as defined in the JsonModel) of the json file
+     * Gets the table's last primary key (as defined in the model)
      *
      * @return integer
      */

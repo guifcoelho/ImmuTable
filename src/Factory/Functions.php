@@ -8,7 +8,7 @@ use guifcoelho\ImmuTable\Exceptions\ImmuTableException;
 if(!function_exists('ImmuTableFactory')){
 
     /**
-     * Run factory build json models. It should be used solely for testing or prototyping
+     * Runs the ImmuTable models factory. It should be used solely for testing or prototyping
      *
      * @param string $class
      * @param  ...$params
