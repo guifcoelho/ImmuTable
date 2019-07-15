@@ -116,28 +116,28 @@ class Sample1 extends Model
     protected $table = "table_example";
 
     public function owner(){
-        return $this->belongToOne(Sample2::class [, $field, $field_in_parent_class]);
+        return $this->ImmuTable_belongToOne(Sample2::class [, $field, $field_in_parent_class]);
     }
 
     public function parents(){
-        return $this->belongsToMany(Sample3::class [, $pivot_table, $field_in_pivot, $parent_field_in_pivot, $field, $field_in_parent])
+        return $this->ImmuTable_belongsToMany(Sample3::class [, $pivot_table, $field_in_pivot, $parent_field_in_pivot, $field, $field_in_parent])
     }
 
     public function child(){
-        return $this->hasOne(Sample4::class [, $field_in_child_model, $field]);
+        return $this->ImmuTable_hasOne(Sample4::class [, $field_in_child_model, $field]);
     }
 
     public function children(){
-        return $this->hasMany(Sample5::class [, $field_in_child_models, $field]);
+        return $this->ImmuTable_hasMany(Sample5::class [, $field_in_child_models, $field]);
     }
 }
 ```
 In the example above, the fields inside brackets are optional. See below a better explanation:
 
-- `belongsToOne`: You must provide the parent class name. If necessary, provide the foreign key name inside the child model, and the related field name inside the parent model.
-- `belongsToMany`: You must provide the parent class name. If necessary, provide the pivot table name, the current model's foreign key name in the pivot table, the parent model's foreign key name in the pivot table, the related current model's field name, and the related parent model's field name.
-- `hasOne`: You must provide the child class name. If necessary, provide the foreign key name inside the child model and the related field name inside the parent model.
-- `hasMany`: You must provide the children class name. If necessary, provide the foreign key name inside the children models and the related field name inside the parent model.
+- `ImmuTable_belongsToOne`: You must provide the parent class name. If necessary, provide the foreign key name inside the child model, and the related field name inside the parent model.
+- `ImmuTable_belongsToMany`: You must provide the parent class name. If necessary, provide the pivot table name, the current model's foreign key name in the pivot table, the parent model's foreign key name in the pivot table, the related current model's field name, and the related parent model's field name.
+- `ImmuTable_hasOne`: You must provide the child class name. If necessary, provide the foreign key name inside the child model and the related field name inside the parent model.
+- `ImmuTable_hasMany`: You must provide the children class name. If necessary, provide the foreign key name inside the children models and the related field name inside the parent model.
 
 
 # Contributing and testing
